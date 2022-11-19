@@ -1,0 +1,16 @@
+{
+  "name": "bahai-browser",
+  "description": "An app to browser the Bahá'í Writings and associated texts'",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=14.13.0"
+  },
+  "keywords": [],
+  "repository": "https://github.com/bahaidev/bahai-browser",
+  "homepage": "https://github.com/bahaidev/bahai-browser",
+  "bugs": "https://github.com/bahaidev/bahai-browser/issues",
+  "license": "MIT",
+  "author": "Brett Zamir",
+  "contributors": [],
+  "dependencies": {}
+}

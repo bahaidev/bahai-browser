@@ -1,0 +1,9 @@
+node_modules
+*.sqlite
+.sync-config.cson
+
+# On server
+core
+npm-debug.log
+pm2.json
+logs

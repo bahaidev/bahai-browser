@@ -1,0 +1,4 @@
+test
+*.sqlite
+.sync-config.cson
+pnpm-lock.yaml

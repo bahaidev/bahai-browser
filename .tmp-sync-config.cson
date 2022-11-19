@@ -1,0 +1,27 @@
+remote:
+  host: "node"
+  user: "node"
+  path: "/home/node/bahaiwritings"
+behaviour:
+  uploadOnSave: true
+  syncDownOnOpen: false
+  forgetConsole: false
+  autoHideConsole: true
+  alwaysSyncAll: true
+option:
+  deleteFiles: true
+  autoHideDelay: 5000
+  exclude: [
+    ".DS_Store"
+    ".sync-config.cson"
+    ".gitattributes"
+    ".gitmodules"
+    ".gitignore"
+    ".git"
+    "node_modules/sqlite3"
+    # "node_modules" # Debugging
+    "tmp"
+    "vendor"
+  ]
+  flags: "avzu"
+  shell: "ssh"

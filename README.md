@@ -21,26 +21,9 @@ is under its own copyright as is the *Collins* bibliography.
 
 ## Installation
 
-If you wish the `TextBrowser` dependency, install with:
-
 ```shell
-npm install git@bitbucket.org:brettz9/bahaiwritings.git
+npm install bahai-browser
 ```
-
-If you just wish the Bahá'í Writings JSON and do not wish
-the `TextBrowser` dependency, install with:
-
-```shell
-npm install git@bitbucket.org:brettz9/bahaiwritings.git#notextbrowser
-```
-
-The JSON data files should be the same. Note that in addition to certain
-HTML, JavaScript, and CSS-related files being removed in the latter,
-the `dependencies` property in its `package.json` is also not set. The
-file `site.json` is also not present as that is oriented for TextBrowser.
-
-Note that the schema files to which the included schema files belong are
-at <https://github.com/brettz9/textbrowser/tree/master/general-schemas>.
 
 ## To-dos
 
@@ -87,10 +70,6 @@ at <https://github.com/brettz9/textbrowser/tree/master/general-schemas>.
     words for **dictionary** look-up (if not Wiktionary or
     Wikidata->Wikipedia->language link mapping, then any other free dictionary
     we might find)
-
-1.  We might switch deps to `peerDependencies` to avoid need for separate
-    JSON-only branch, though it would require `install-peerdeps bahaiwritings`
-    or such.
 
 1.  Upon update completion have service worker read from the (latest
     section of) `CHANGES.md`
@@ -163,47 +142,7 @@ at <https://github.com/brettz9/textbrowser/tree/master/general-schemas>.
         to enable side-by-side views of (Bahai9.com) iframes dedicated to a
         given verse/paragraph!
 
-1.  Specific works
-
-    1.  Hidden Words
-        1. Wiki links to Bahai9.com
-
-    1.  Aqdas
-        1.  Passages translated/excerpted by Shoghi Effendi
-
-    1.  Qur'an and Bible
-
-        1.  Re-build based on formatted copies so as not to lose visual
-            distinguishability, e.g., Sale's many superscripts, etc.
-
-        1.  Parse an Arabic Qur'án into Rodwell's verses and all of the
-            Rodwell/Sale and Bahá'í references into traditional versing
-
-        1.  There is a good amount of invalid XHTML in the JSON databases
-              for the Qur'an and Bible (links w/o quotes) that would ideally
-              be replaced (Tidy script?) as well as the XHTML and link
-              locations in the Iqan copy (would just be nice to be clean
-              and polyglot-friendly for any XHTML5 uses)
-
-        1.  Integrate from
-            <https://bahai-library.com/lippitt_bible_bahai_index>.
-
-    1.  Collins
-
-        1.  Need to split Collins into own repo? (or describe terms)
-
-        1.  Upload newer Collins and fix any bugs in formatting.
-
-        1.  Add Collins language metadata for each field
-
-        1.  Lower priority: If implementing combining of fields, add
-            Collins for this.
-
-        1.  Add any other reasonable `browse_options`
-
-    1.  Other works
-
-        1.  Encode more Writings into *TextBrowser* JSON
+1.  Specific works - See [bahaiwritings](https://github.com/bahaidev/bahaiwritings)
 
 1.  Lower priority
 
@@ -227,24 +166,17 @@ npm test
 ```
 
 Note that the tests currently only perform schema validation. We do not
-yet have UI tests.
+yet have full UI tests though these can be run with:
+
+```shell
+npm run browser-test
+```
 
 If you merely wish to see the app running in a server, you can run:
 
 ```shell
-npm start
+npm run server
 ```
-
-If you do not wish to automatically open a tab each time the command is run,
-use:
-
-```shell
-npm run start-no-open
-```
-
-You can also use this latter option to run the browser tests
-(from <http://127.0.0.1:8083/test/>). Note, however, that
-this may lock up the browser as there are many files to load.
 
 ## Background
 

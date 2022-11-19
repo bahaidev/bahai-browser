@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>bahai-browser Test Suite</title>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+
+    <!-- Todo: Switch to ESM, for browser here and Node when available -->
+    <script src="../node_modules/ajv/dist/ajv.bundle.js"></script>
+    <script src="../node_modules/simple-get-json/dist/index.js"></script>
+    <script src="../node_modules/json-refs/dist/json-refs-min.js"></script>
+    <script src="../node_modules/fast-json-patch/dist/fast-json-patch.min.js"></script>
+
+    <!-- Testing dependencies -->
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+  </head>
+  <body>
+    <h1>bahai-browser Test Suite</h1>
+    <div id="mocha"></div>
+    <script>
+    /* globals mocha -- No ESM */
+    mocha.setup('bdd');
+    window.assert = chai.assert;
+    window.__dirname = '';
+    </script>
+    <script src="bahaiwritingsTests.js"></script>
+    <script>
+    /* globals mocha -- No ESM */
+    mocha.run();
+    </script>
+  </body>
+</html>

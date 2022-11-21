@@ -12,6 +12,7 @@ function cloneJSON (obj) {
 }
 
 const textbrowserBase = appBase + 'node_modules/textbrowser/';
+const bahaiwritingsBase = appBase + 'node_modules/bahaiwritings/';
 const schemaBase = textbrowserBase + 'general-schemas/';
 // const localesBase = textbrowserBase + 'locales/';
 // const appdataBase = textbrowserBase + 'appdata/';
@@ -132,22 +133,28 @@ describe('bahaiwritings Tests', function () {
     const results = await Promise.all([
       ...specificFiles.map((f) => {
         return JsonRefs.resolveRefsAt(
-          path.join(__dirname, appBase, 'data/writings/' + f)
+          path.join(__dirname, bahaiwritingsBase, 'data/writings/' + f)
         );
       }),
       ...specificFiles.map((f) => {
         return getJSON(
-          path.join(__dirname, appBase, 'data/writings/schemas/' + f + 'schema')
+          path.join(
+            __dirname,
+            bahaiwritingsBase,
+            'data/writings/schemas/' + f + 'schema'
+          )
         );
       }),
       ...otherSpecificFiles.map((f) => {
         return JsonRefs.resolveRefsAt(
-          path.join(__dirname, appBase, 'data/other-works/' + f)
+          path.join(__dirname, bahaiwritingsBase, 'data/other-works/' + f)
         );
       }),
       ...otherSpecificFiles.map((f) => {
         return getJSON(path.join(
-          __dirname, appBase, 'data/other-works/schemas/' + f + 'schema'
+          __dirname,
+          bahaiwritingsBase,
+          'data/other-works/schemas/' + f + 'schema'
         ));
       }),
       ...tableFiles.map((f) => getJSON(path.join(__dirname, schemaBase, f)))
@@ -243,7 +250,7 @@ describe('bahaiwritings Tests', function () {
       ),
       path.join(
         __dirname,
-        appBase + 'resources/user-sample.json'
+        appBase + 'resources/user.json'
       )
     ]);
 

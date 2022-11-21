@@ -4,7 +4,7 @@ import {getJSON} from './node_modules/simple-get-json/dist/index-es.js';
 import activateCallback from './node_modules/textbrowser/dist/activateCallback-es.js';
 import {getWorkFiles} from './node_modules/textbrowser/dist/WorkInfo-es.js';
 
-// VERSION 0.43.2
+// VERSION 0.1.0
 
 const CURRENT_CACHES = {
   prefetch: 'prefetch-cache-v'
@@ -131,7 +131,8 @@ const defaultUserStaticFiles = [
   'files.json',
   'site.json',
   'resources/user.js'
-  // We do not put the user.json here as that is obtained live with service worker
+  // We do not put the user.json here as that is obtained live with this
+  //   service worker via `pathToUserJSON`
 ];
 // Todo: We could supply `new URL(fileName, moduleURL).href` to
 //   get these as reliable full paths without hard-coding or needing to

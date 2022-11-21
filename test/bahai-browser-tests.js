@@ -11,6 +11,8 @@ function cloneJSON (obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+const textbrowserDataSchemasBase = appBase +
+  'node_modules/textbrowser-data-schemas/schemas/';
 const textbrowserBase = appBase + 'node_modules/textbrowser/';
 const bahaiwritingsBase = appBase + 'node_modules/bahaiwritings/';
 const schemaBase = textbrowserBase + 'general-schemas/';
@@ -26,7 +28,11 @@ const jsonSchemaSpec = 'node_modules/json-metaschema/draft-07-schema.json';
 * @returns {boolean} Whether valid or not
 */
 function validate (schema, data, extraSchemas = [], additionalOptions = {}) {
-  const ajv = new Ajv({allowMatchingProperties: true, ...additionalOptions});
+  const ajv = new Ajv({
+    allowMatchingProperties: true,
+    addUsedSchema: false,
+    ...additionalOptions
+  });
   let valid;
   try {
     ajv.addFormat('html', () => true);
@@ -59,52 +65,58 @@ describe('bahaiwritings Tests', function () {
     ];
     const results = await Promise.all([
       JsonRefs.resolveRefsAt(path.join(__dirname, appBase, 'files.json')),
-      getJSON(path.join(
-        __dirname,
-        appBase + jsonSchemaSpec
-      )),
+      // getJSON(path.join(
+      //   __dirname,
+      //   appBase + jsonSchemaSpec
+      // )),
       ...[
         'files.jsonschema',
         ...extraSchemaFiles
       ].map((f) => getJSON(path.join(__dirname, schemaBase, f)))
     ]);
     const [
-      {resolved: data}, jsonSchema, schema, ...extraSchemaObjects
+      {resolved: filesData},
+      // jsonSchema,
+      filesSchema,
+      ...extraSchemaObjects
     ] = results;
     const extraSchemas = extraSchemaObjects.map((eso, i) => [
       extraSchemaFiles[i], eso
     ]);
-    const valid = validate(schema, data, extraSchemas);
+    const valid = validate(filesSchema, filesData, extraSchemas);
     assert.strictEqual(valid, true);
 
-    const data2 = cloneJSON(data);
-    const valid2 = validate(schema, data2, extraSchemas, {
-      removeAdditional: 'all',
-      validateSchema: false
-    });
-    assert.strictEqual(valid2, true);
-    const diff = jsonpatch.compare(data, data2).filter((dff) => {
-      // Apparently need to filter due to limitations per
-      //   https://github.com/epoberezkin/ajv#filtering-data
-      return !dff.path || (dff.op === 'remove' &&
-        !(/\/additionalItems$/u).test(dff.path));
-    });
-    assert.strictEqual(diff.length, 0);
-
-    const schemas = results.slice(2);
-    schemas.forEach((schma, i) => {
-      validate(jsonSchema, schma, undefined, {
-        validateSchema: false
-      });
-
-      const schema2 = cloneJSON(schma);
-      validate(jsonSchema, schema2, extraSchemas, {
-        removeAdditional: 'all',
-        validateSchema: false
-      });
-      const dff = jsonpatch.compare(schma, schema2);
-      assert.strictEqual(dff.length, 0);
-    });
+    // This doesn't remove all as hoped as don't have
+    //   `additionalProperties: false` set; see
+    //   https://github.com/ajv-validator/ajv/issues/2170
+    // const data2 = cloneJSON(filesData);
+    // const valid2 = validate(filesSchema, data2, extraSchemas, {
+    //   removeAdditional: 'all',
+    //   validateSchema: false
+    // });
+    // assert.strictEqual(valid2, true);
+    // const diff = jsonpatch.compare(data, data2).filter((dff) => {
+    //   // Apparently need to filter due to limitations per
+    //   //   https://github.com/epoberezkin/ajv#filtering-data
+    //   return !dff.path || (dff.op === 'remove' &&
+    //     !(/\/additionalItems$/u).test(dff.path));
+    // });
+    // assert.strictEqual(diff.length, 0);
+    //
+    // const schemas = results.slice(2);
+    // schemas.forEach((schma, i) => {
+    //   validate(jsonSchema, schma, undefined, {
+    //     validateSchema: false
+    //   });
+    //
+    //   const schema2 = cloneJSON(schma);
+    //   validate(jsonSchema, schema2, extraSchemas, {
+    //     removeAdditional: 'all',
+    //     validateSchema: false
+    //   });
+    //   const dff = jsonpatch.compare(schma, schema2);
+    //   assert.strictEqual(dff.length, 0);
+    // });
   });
   it('Specific data files', async function () {
     this.timeout(50000);
@@ -157,7 +169,11 @@ describe('bahaiwritings Tests', function () {
           'data/other-works/schemas/' + f + 'schema'
         ));
       }),
-      ...tableFiles.map((f) => getJSON(path.join(__dirname, schemaBase, f)))
+      ...tableFiles.map((f) => getJSON(path.join(
+        __dirname,
+        textbrowserDataSchemasBase,
+        f
+      )))
     ]);
 
     let cursor = 0;
@@ -173,7 +189,8 @@ describe('bahaiwritings Tests', function () {
 
     const extraSchemas = [
       [
-        '../../../node_modules/textbrowser/general-schemas/table.jsonschema',
+        '../../../node_modules/textbrowser-data-schemas/' +
+          'schemas/table.jsonschema',
         table
       ]
     ];
@@ -183,14 +200,17 @@ describe('bahaiwritings Tests', function () {
         const vald = validate(schema, data, extraSchemas);
         assert.strictEqual(vald, true);
 
-        const data2 = cloneJSON(data);
-        const vald2 = validate(schema, data2, extraSchemas, {
-          removeAdditional: 'all',
-          validateSchema: false
-        });
-        assert.strictEqual(vald2, true);
-        const diff = jsonpatch.compare(data, data2);
-        assert.strictEqual(diff.length, 0);
+        // This doesn't remove all as hoped as don't have
+        //   `additionalProperties: false` set; see
+        //   https://github.com/ajv-validator/ajv/issues/2170
+        // const data2 = cloneJSON(data);
+        // const vald2 = validate(schema, data2, extraSchemas, {
+        //   removeAdditional: 'all',
+        //   validateSchema: false
+        // });
+        // assert.strictEqual(vald2, true);
+        // const diff = jsonpatch.compare(data, data2);
+        // assert.strictEqual(diff.length, 0);
       });
     };
     testSchemaFiles(dataFiles, schemaFiles);
@@ -204,36 +224,46 @@ describe('bahaiwritings Tests', function () {
         __dirname,
         appBase + jsonSchemaSpec
       )),
-      getJSON(path.join(__dirname, schemaBase, 'site.jsonschema')),
+      JsonRefs.resolveRefsAt(
+        path.join(__dirname, schemaBase, 'site.jsonschema')
+      ),
       getJSON(path.join(__dirname, schemaBase, 'locale.jsonschema'))
     ]);
-    const [{resolved: data}, jsonSchema, schema, localeSchema] = results;
+    const [
+      {resolved: data}, jsonSchema, {resolved: schema}, localeSchema
+    ] = results;
     const extraSchemas = [['locale.jsonschema', localeSchema]];
     const valid = validate(schema, data, extraSchemas);
     assert.strictEqual(valid, true);
 
-    const data2 = cloneJSON(data);
-    const valid2 = validate(schema, data2, extraSchemas, {
-      removeAdditional: 'all',
-      validateSchema: false
-    });
-    assert.strictEqual(valid2, true);
-    const diff = jsonpatch.compare(data, data2);
-    assert.strictEqual(diff.length, 0);
+    // This doesn't remove all as hoped as don't have
+    //   `additionalProperties: false` set; see
+    //   https://github.com/ajv-validator/ajv/issues/2170
+    // const data2 = cloneJSON(data);
+    // const valid2 = validate(schema, data2, extraSchemas, {
+    //   removeAdditional: 'all',
+    //   validateSchema: false
+    // });
+    // assert.strictEqual(valid2, true);
+    // const diff = jsonpatch.compare(data, data2);
+    // assert.strictEqual(diff.length, 0);
 
     const schemas = results.slice(2);
     schemas.forEach((schma, i) => {
-      const vlid = validate(jsonSchema, schma);
+      const vlid = validate(jsonSchema, schma, extraSchemas);
       assert.strictEqual(vlid, true);
 
-      const schema2 = cloneJSON(schma);
-      const vlid2 = validate(jsonSchema, schema2, extraSchemas, {
-        removeAdditional: 'all',
-        validateSchema: false
-      });
-      assert.strictEqual(vlid2, true);
-      const dff = jsonpatch.compare(schma, schema2);
-      assert.strictEqual(dff.length, 0);
+      // This doesn't remove all as hoped as don't have
+      //   `additionalProperties: false` set; see
+      //   https://github.com/ajv-validator/ajv/issues/2170
+      // const schema2 = cloneJSON(schma);
+      // const vlid2 = validate(jsonSchema, schema2, extraSchemas, {
+      //   removeAdditional: 'all',
+      //   validateSchema: false
+      // });
+      // assert.strictEqual(vlid2, true);
+      // const dff = jsonpatch.compare(schma, schema2);
+      // assert.strictEqual(dff.length, 0);
     });
   });
 
@@ -253,25 +283,31 @@ describe('bahaiwritings Tests', function () {
         appBase + 'resources/user.json'
       )
     ]);
+    console.log('userJSONSchema', userJSONSchema);
+    const validSchema = validate(jsonSchema, userJSONSchema);
+    assert.strictEqual(validSchema, true);
 
-    const userJSONSchema2 = cloneJSON(userJSONSchema);
-    validate('Schema test', jsonSchema, userJSONSchema, undefined, {
-      validateSchema: false
-    });
-    const diff = jsonpatch.compare(userJSONSchema, userJSONSchema2);
-    if (diff.length) {
-      console.log(`diff for data file`, diff);
-    }
-    assert.strictEqual(diff.length, 0);
+    const valid = validate(userJSONSchema, userJSON);
+    assert.strictEqual(valid, true);
 
-    const userJSON2 = cloneJSON(userJSON);
-    validate('Schema test', userJSONSchema, userJSON, undefined, {
-      validateSchema: false
-    });
-    const diff2 = jsonpatch.compare(userJSON, userJSON2);
-    if (diff2.length) {
-      console.log(`diff for data file`, diff2);
-    }
-    assert.strictEqual(diff2.length, 0);
+    // const userJSONSchema2 = cloneJSON(userJSONSchema);
+    // validate('Schema test', jsonSchema, userJSONSchema, undefined, {
+    //   validateSchema: false
+    // });
+    // const diff = jsonpatch.compare(userJSONSchema, userJSONSchema2);
+    // if (diff.length) {
+    //   console.log(`diff for data file`, diff);
+    // }
+    // assert.strictEqual(diff.length, 0);
+    //
+    // const userJSON2 = cloneJSON(userJSON);
+    // validate('Schema test', userJSONSchema, userJSON, undefined, {
+    //   validateSchema: false
+    // });
+    // const diff2 = jsonpatch.compare(userJSON, userJSON2);
+    // if (diff2.length) {
+    //   console.log(`diff for data file`, diff2);
+    // }
+    // assert.strictEqual(diff2.length, 0);
   });
 });

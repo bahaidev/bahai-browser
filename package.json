@@ -25,9 +25,9 @@
     "open-only": "open-cli http://127.0.0.1:8082/test/",
     "open-only-delayed": "run-s delay open-only",
     "open": "run-p start open-only-delayed",
-    "server": "textbrowser --allowPlugins --namespace=bahaiwritings --httpServer=../../../indexServer.js --expressServer ../../../expressServer.js",
+    "server": "textbrowser --allowPlugins --namespace=bahaiwritings --httpServer=../../../extraServers/indexServer.js --expressServer ../../../extraServers/expressServer.js",
     "server-activate": "textbrowser --allowPlugins --nodeActivate  --namespace=bahaiwritings",
-    "dev-server": "node ../textbrowser/server/main.js --allowPlugins --namespace=bahaiwritings --httpServer=../../bahaiwritings/indexServer.js",
+    "dev-server": "node ../textbrowser/server/main.js --allowPlugins --namespace=bahaiwritings --httpServer=../../bahaiwritings/extraServers/indexServer.js",
     "copy-tb": "cp -a ../textbrowser/dist/. node_modules/textbrowser/dist/ && cp -a ../textbrowser/locales/. node_modules/textbrowser/locales/ && cp -a ../textbrowser/server/. node_modules/textbrowser/server/ && chmod -R 755 node_modules/textbrowser/server/",
     "test": "npm run eslint && run-p server testcafe"
   },

@@ -2,15 +2,6 @@
 /* globals path, appBase, JsonRefs, Ajv,
     getJSON, __dirname -- Polyglot */
 
-/**
- *
- * @param {external:JSON} obj
- * @returns {external:JSON}
- */
-function cloneJSON (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
 const textbrowserDataSchemasBase = appBase +
   'node_modules/textbrowser-data-schemas/schemas/';
 const textbrowserBase = appBase + 'node_modules/textbrowser/';
@@ -35,6 +26,9 @@ function validate (schema, data, extraSchemas = [], additionalOptions = {}) {
   });
   let valid;
   try {
+    ajv.addFormat('uri', () => true); // For validation of schemas
+    ajv.addFormat('regex', () => true); // For validation of schemas
+    ajv.addFormat('uri-reference', () => true); // For validation of schemas
     ajv.addFormat('html', () => true);
     ajv.addFormat('language-code', () => true);
     extraSchemas.forEach(([key, val]) => {
@@ -250,7 +244,9 @@ describe('bahaiwritings Tests', function () {
 
     const schemas = results.slice(2);
     schemas.forEach((schma, i) => {
-      const vlid = validate(jsonSchema, schma, extraSchemas);
+      const vlid = validate(jsonSchema, schma, extraSchemas, {
+        allowUnionTypes: true
+      });
       assert.strictEqual(vlid, true);
 
       // This doesn't remove all as hoped as don't have
@@ -283,8 +279,10 @@ describe('bahaiwritings Tests', function () {
         appBase + 'resources/user.json'
       )
     ]);
-    console.log('userJSONSchema', userJSONSchema);
-    const validSchema = validate(jsonSchema, userJSONSchema);
+
+    const validSchema = validate(jsonSchema, userJSONSchema, undefined, {
+      allowUnionTypes: true
+    });
     assert.strictEqual(validSchema, true);
 
     const valid = validate(userJSONSchema, userJSON);

@@ -53,7 +53,7 @@ module.exports = {
     },
     {
       files: ['test/bahaiwritingsTests.js'],
-      extends: ['ash-nazg/sauron-node-script-overrides', 'plugin:testcafe/recommended']
+      extends: ['ash-nazg/sauron-node-overrides', 'plugin:testcafe/recommended']
     }
   ],
   env: {

@@ -180,15 +180,25 @@ describe('bahaiwritings Tests', function () {
         __dirname,
         textbrowserDataSchemasBase,
         f
-      )))
+      ))),
+      JsonRefs.resolveRefsAt(path.join(
+        __dirname,
+        textbrowserDataSchemasBase,
+        'metadata.jsonschema'
+      ))
     ]);
 
     let cursor = 0;
     const [
-      dataFiles, schemaFiles, otherDataFiles, otherSchemaFiles, [table]
+      dataFiles, schemaFiles,
+      otherDataFiles, otherSchemaFiles,
+      [table],
+      [{resolved: metadataSchemaFile}]
     ] = [
-      specificFiles, specificFiles, otherSpecificFiles,
-      otherSpecificFiles, tableFiles
+      specificFiles, specificFiles,
+      otherSpecificFiles, otherSpecificFiles,
+      tableFiles,
+      [null]
     ].map((files) => {
       // eslint-disable-next-line no-return-assign -- Convenient
       return results.slice(cursor, cursor += files.length);
@@ -201,11 +211,24 @@ describe('bahaiwritings Tests', function () {
         table
       ]
     ];
+
+    // JsonRefs does not resolve into a circular local path, so we do so
+    //   ourselves
+    metadataSchemaFile.properties['localization-strings']
+      .patternProperties['.*'].anyOf[2].$ref =
+        JsonRefs.pathToPtr([
+          'properties', 'localization-strings'
+        ]);
+
     const testSchemaFiles = (dtaFiles, schmaFiles) => {
-      dtaFiles.forEach(({resolved: {data}}, i) => {
+      dtaFiles.forEach(({resolved: {data, metadata}}, i) => {
         const schema = schmaFiles[i];
+
         const vald = validate(schema, data, extraSchemas);
         assert.strictEqual(vald, true);
+
+        const validMetadata = validate(metadataSchemaFile, metadata);
+        assert.strictEqual(validMetadata, true);
 
         // This doesn't remove all as hoped as don't have
         //   `additionalProperties: false` set; see

@@ -63,20 +63,33 @@ describe('bahaiwritings Tests', function () {
       //   __dirname,
       //   appBase + jsonSchemaSpec
       // )),
-      ...[
-        'files.jsonschema',
-        ...extraSchemaFiles
-      ].map((f) => getJSON(path.join(__dirname, schemaBase, f)))
+      JsonRefs.resolveRefsAt(
+        path.join(__dirname, schemaBase, 'files.jsonschema')
+      ),
+      ...extraSchemaFiles.map(
+        (f) => getJSON(path.join(__dirname, textbrowserDataSchemasBase, f))
+      )
     ]);
     const [
       {resolved: filesData},
       // jsonSchema,
-      filesSchema,
+      {resolved: filesSchema},
       ...extraSchemaObjects
     ] = results;
     const extraSchemas = extraSchemaObjects.map((eso, i) => [
       extraSchemaFiles[i], eso
     ]);
+
+    // This circular reference wasn't being fixed by the JsonRefs preprocessor,
+    //   so we have to graft it ourselves after the fact
+    filesSchema.properties['localization-strings']
+      .patternProperties['.*'].patternProperties['.*']
+      .anyOf[2].patternProperties['.*'].anyOf[2].$ref =
+        JsonRefs.pathToPtr([
+          'properties', 'localization-strings', 'patternProperties', '.*',
+          'patternProperties', '.*', 'anyOf', '2'
+        ]);
+
     const valid = validate(filesSchema, filesData, extraSchemas);
     assert.strictEqual(valid, true);
 
@@ -221,12 +234,23 @@ describe('bahaiwritings Tests', function () {
       JsonRefs.resolveRefsAt(
         path.join(__dirname, schemaBase, 'site.jsonschema')
       ),
-      getJSON(path.join(__dirname, schemaBase, 'locale.jsonschema'))
+      getJSON(
+        path.join(__dirname, textbrowserDataSchemasBase, 'locale.jsonschema')
+      )
     ]);
     const [
       {resolved: data}, jsonSchema, {resolved: schema}, localeSchema
     ] = results;
     const extraSchemas = [['locale.jsonschema', localeSchema]];
+
+    // This circular reference wasn't being converted to a pure path by
+    //   JsonRefs, so we have to alter it ourselves after the fact
+    schema.properties['localization-strings']
+      .patternProperties['.*'].anyOf[2].$ref =
+        JsonRefs.pathToPtr([
+          'properties', 'localization-strings'
+        ]);
+
     const valid = validate(schema, data, extraSchemas);
     assert.strictEqual(valid, true);
 

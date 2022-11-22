@@ -45,7 +45,7 @@
     "load-stylesheets": "^0.10.0",
     "open-cli": "^7.1.0",
     "simple-get-json": "^9.0.0",
-    "textbrowser": "^0.46.3",
+    "textbrowser": "^0.47.0-beta.1",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
@@ -80,7 +80,7 @@
     "json-refs": "^3.0.15",
     "mocha": "^10.1.0",
     "npm-run-all": "^4.1.5",
-    "rollup": "^3.3.0",
+    "rollup": "^3.4.0",
     "testcafe": "^2.1.0",
     "textbrowser-data-schemas": "^0.2.0"
   }

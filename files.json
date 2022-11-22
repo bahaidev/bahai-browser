@@ -515,8 +515,8 @@
             "id": "other-writings",
             "name": {"localeKey": "other-writings"},
             "directions": {"localeKey": "choosewritings_bahai_writingsotherdb"},
-            "schemaBaseDirectory": "data/other-works/schemas",
-            "metadataBaseDirectory": "data/other-works/metadata",
+            "schemaBaseDirectory": "node_modules/bahaiwritings/data/other-works/schemas",
+            "metadataBaseDirectory": "node_modules/bahaiwritings/data/other-works/metadata",
             "files": [
                 {"name": "lights", "file": {"$ref": "node_modules/bahaiwritings/data/other-works/lights.json"}, "schemaFile": "lights.jsonschema", "metadataFile": "lights.metadata", "shortcut": "log"}
             ]

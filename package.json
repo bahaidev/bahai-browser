@@ -45,7 +45,7 @@
     "load-stylesheets": "^0.10.0",
     "open-cli": "^7.1.0",
     "simple-get-json": "^9.0.1",
-    "textbrowser": "^0.47.0-beta.2",
+    "textbrowser": "^0.47.0",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {

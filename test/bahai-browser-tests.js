@@ -1,4 +1,3 @@
-/* eslint-disable import/unambiguous -- Imports are boostrapped */
 /* globals path, appBase, JsonRefs, Ajv,
     getJSON, __dirname -- Polyglot */
 

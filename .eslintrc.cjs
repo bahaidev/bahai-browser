@@ -48,12 +48,18 @@ module.exports = {
       }
     },
     {
-      files: 'test/**/*.js',
-      extends: ['ash-nazg/sauron-overrides', 'plugin:testcafe/recommended']
+      files: ['test/**/*.js', 'cypress/**'],
+      extends: ['ash-nazg/sauron-overrides', 'plugin:cypress/recommended'],
+      rules: {
+        'promise/catch-or-return': 'off',
+        'promise/always-return': 'off',
+        'promise/prefer-await-to-then': 'off',
+        'import/unambiguous': 'off'
+      }
     },
     {
       files: ['test/bahaiwritingsTests.js'],
-      extends: ['ash-nazg/sauron-node-overrides', 'plugin:testcafe/recommended']
+      extends: ['ash-nazg/sauron-node-overrides', 'plugin:cypress/recommended']
     }
   ],
   env: {

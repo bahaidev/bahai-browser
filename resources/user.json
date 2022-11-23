@@ -29,6 +29,7 @@
         "plugins/websearch.js",
         "plugins/wikify.js",
         "plugins/wikilinks.js",
+        "plugins/wikilinks-existing.js",
         "plugins/wordbyword-tooltips.js",
         "plugins/wordbyword.js"
     ]

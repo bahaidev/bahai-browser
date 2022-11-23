@@ -91,6 +91,8 @@ npm install bahai-browser
       to avoid multiple repeat requests, query a central cache (even
       an API to `BADIPagesCreatedLinks`).
 
+    1. Allow plugins to be reused multiple times with different metadata
+
 1.  Apply <https://www.gnu.org/software/librejs/free-your-javascript.html>
     labels to provide machine-automated detection of (open source) licenses.
 

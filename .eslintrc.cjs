@@ -14,6 +14,7 @@ module.exports = {
       'document.body',
       'document.dir',
       'document.hasFocus',
+      'document.querySelector',
       'document.querySelectorAll',
       'Error',
       'fetch',

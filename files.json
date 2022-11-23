@@ -61,7 +61,10 @@
                     "fieldname": "Editable wiki page"
                 },
                 "wikilinks": {
-                    "fieldname": "Links to Wiki"
+                    "fieldname": "Links to wiki"
+                },
+                "wikilinks-existing": {
+                    "fieldname": "Links to user wiki"
                 },
                 "wordbyword": {
                     "fieldname": "Word-by-word \"Auto-translation\" from {applicableField} to {targetLanguage}"
@@ -138,7 +141,10 @@
                     "fieldname": "Editable wiki page"
                 },
                 "wikilinks": {
-                    "fieldname": "Links to Wiki"
+                    "fieldname": "Links to wiki"
+                },
+                "wikilinks-existing": {
+                    "fieldname": "Links to user wiki"
                 },
                 "wordbyword": {
                     "fieldname": "Word-by-word \"Auto-translation\" from {applicableField} to {targetLanguage}"
@@ -215,7 +221,10 @@
                     "fieldname": "Editable wiki page"
                 },
                 "wikilinks": {
-                    "fieldname": "Links to Wiki"
+                    "fieldname": "Links to wiki"
+                },
+                "wikilinks-existing": {
+                    "fieldname": "Links to user wiki"
                 },
                 "wordbyword": {
                     "fieldname": "Word-by-word \"Auto-translation\" from {applicableField} to {targetLanguage}"
@@ -292,7 +301,10 @@
                     "fieldname": "Editable wiki page"
                 },
                 "wikilinks": {
-                    "fieldname": "Links to Wiki"
+                    "fieldname": "Links to wiki"
+                },
+                "wikilinks-existing": {
+                    "fieldname": "Links to user wiki"
                 },
                 "wordbyword": {
                     "fieldname": "Word-by-word \"Auto-translation\" from {applicableField} to {targetLanguage}"
@@ -378,6 +390,10 @@
             "path": "plugins/wikilinks.js",
             "onByDefault": true
         },
+        "wikilinks-existing": {
+            "path": "plugins/wikilinks-existing.js",
+            "onByDefault": true
+        },
         "isbn": {
             "path": "plugins/isbn.js",
             "onByDefault": true
@@ -451,6 +467,18 @@
                         "Paragraph": {
                             "meta": {
                                 "baseURL": "https://bahai9.com/wiki/Kitáb-i-Aqdas/par"
+                            }
+                        }
+                    },
+                    "placement": "end"
+                },
+                "wikilinks-existing": {
+                    "applicable-fields": {
+                        "Paragraph": {
+                            "meta": {
+                                "userEditURL": "https://bahai9.com/index.php?title=User:%USER/Kit%C3%A1b-i-Aqdas/par%s&action=edit&prepopulate=1",
+                                "userURL": "https://bahai9.com/wiki/User:%USER/Kit%C3%A1b-i-Aqdas/par%s",
+                                "baseURL": "https://bahai9.com/wiki/Category:User/Kit%C3%A1b-i-Aqdas/par%s"
                             }
                         }
                     },

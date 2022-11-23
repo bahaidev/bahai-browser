@@ -37,6 +37,21 @@ const tb = new TextBrowser({
     $, l, jml, paramsSetter, getDataForSerializingParamsAsURL, work,
     replaceHash, getFieldAliasOrNames
   }) => ['div', [
+    // Todo: Move this into plugin and have textbrowser call
+    ['label', [
+      'Your wiki user name: ',
+      ['input', {
+        $on: {
+          change (e) {
+            localStorage.setItem('bahai-browser-wikilinks-existing-username', e.target.value);
+          }
+        },
+        id: 'wikilinks-existing-username',
+        value: localStorage.getItem('bahai-browser-wikilinks-existing-username') || '',
+        placeholder: 'e.g., Brettz9'
+      }],
+      ['br', 'br']
+    ]],
     // Todo: i18nize (ideally with intl-dom)
     (window.chrome
       ? ['div', {id: 'generate-results', hidden: 'true'}, [

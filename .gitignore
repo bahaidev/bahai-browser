@@ -1,6 +1,8 @@
 node_modules
 *.sqlite
 .sync-config.cson
+resources/user-instrumented.js
+coverage
 
 # On server
 core

@@ -1,6 +1,6 @@
 describe('empty spec', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8000/');
+    cy.visit('http://localhost:8000/index-instrumented.html');
   });
 
   it('Accessibility', function () {

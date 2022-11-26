@@ -23,11 +23,12 @@ const tb = new TextBrowser({
   // requestPersistentStorage: false,
   // showEmptyInterlinear: false,
   // showTitleOnSingleInterlinear: false,
+  namespace: 'bahaiwritings',
+  version: '0.44.0',
   files: 'files.json',
   stylesheets: [
     '@builtin', 'resources/user.css', 'node_modules/tippy.js/dist/tippy.css'
   ],
-  namespace: 'bahaiwritings',
   allowPlugins: true,
   // dynamicBasePath: '',
   trustFormatHTML: true,

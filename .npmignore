@@ -2,3 +2,4 @@ test
 *.sqlite
 .sync-config.cson
 pnpm-lock.yaml
+resources/user-instrumented.js

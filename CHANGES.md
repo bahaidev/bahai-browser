@@ -1,4 +1,10 @@
-# CHANGES to `bahai-bot`
+# CHANGES to `bahai-browser`
+
+## 0.3.0
+
+- refactor: use updated API for service worker
+- chore: drop `simple-get-json` as direct dep.
+- chore: update devDeps.
 
 ## 0.2.0
 

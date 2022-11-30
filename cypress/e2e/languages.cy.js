@@ -1,4 +1,4 @@
-describe('empty spec', () => {
+describe('Languages page', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8000/index-instrumented.html');
   });
@@ -40,5 +40,12 @@ describe('empty spec', () => {
       ).to.equal('en-US', 'Got language');
       expect(win.document.dir).to.equal('ltr', 'Got direction');
     });
+  });
+
+  it.skip('Redirects to the work selection page', function () {
+    cy.get('select[name="lang"]').select('en-US');
+    cy.location('hash', {
+      timeout: 10000
+    }).should('eq', '#lang=en-US');
   });
 });

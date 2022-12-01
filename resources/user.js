@@ -142,100 +142,101 @@ const tb = new TextBrowser({
 
           const fieldAliasOrNames = await getFieldAliasOrNames();
 
-          if (window.chrome) {
-            const urls = fieldAliasOrNames.flatMap(({groupName, worksToFields}) => {
-              return worksToFields.map(({fieldAliasOrNames, workName, shortcut: SHORTCUTURL}) => {
-                const url = getUrlForFieldAliasOrNames({
-                  workName, fieldAliasOrNames
-                });
-                return {
-                  short_name: workName,
-                  keyword: SHORTCUTURL,
-                  url
-                };
-              });
-            });
-            // Keep `var` instead of `let`/`const` so can be re-pasted if needed
-            $('#code').value = `  var searchEngines = ${JSON.stringify(urls)};
+          /* istanbul ignore if */
+          if (!window.chrome) {
+            const date = Date.now();
+            const ADD_DATE = date;
+            const LAST_MODIFIED = date;
+            const blob = new Blob([
+              new XMLSerializer().serializeToString(
+                jml({$document: {
+                  $DOCTYPE: {name: 'NETSCAPE-Bookmark-file-1'},
+                  title: l('Bookmarks'),
+                  body: [
+                    ['h1', [l('Bookmarks_Menu')]],
+                    ...fieldAliasOrNames.flatMap(({groupName, worksToFields}) => {
+                      return [
+                        ['dt', [
+                          ['h3', {
+                            ADD_DATE,
+                            LAST_MODIFIED
+                          }, [
+                            groupName
+                          ]]
+                        ]],
+                        ['dl', [
+                          ['p'],
+                          ...worksToFields.map(({fieldAliasOrNames, workName, shortcut: SHORTCUTURL}) => {
+                            // Todo (low): Add anchor, etc. (until handled by `work-startEnd`); &aqdas-anchor1-1=2&anchorfield1=Paragraph
+                            // Todo: option for additional browse field groups (startEnd2, etc.)
+                            // Todo: For link text, use `heading` or `alias` from metadata files in place of workName (requires loading all metadata files though)
+                            // Todo: Make Chrome NativeExt add-on to manipulate its search engines (to read a bookmarks file from Firefox properly, i.e., including keywords) https://www.makeuseof.com/answers/export-google-chrome-search-engines-address-bar/
 
-searchEngines.forEach(({ short_name, keyword, url }) => {
-  // Actual search engine import magic
-  chrome.send('searchEngineEditStarted', [-1]);
-  chrome.send('searchEngineEditCompleted', [short_name, keyword, url]);
-});`;
+                            const url = getUrlForFieldAliasOrNames({
+                              workName, fieldAliasOrNames
+                            });
+
+                            return ['dt', [
+                              ['a', {
+                                href: url,
+                                ADD_DATE,
+                                LAST_MODIFIED,
+                                SHORTCUTURL
+                              }, [
+                                workName
+                              ]]
+                            ]];
+                          })
+                        ]]
+                      ];
+                    })
+                  ]
+                }})
+              ).replace(
+                // Chrome has a quirk that requires this (and not
+                //   just any whitespace)
+                // We're not getting the keywords with Chrome,
+                //   but at least usable for bookmarks (though
+                //   not the groups apparently); update: actually, now we're
+                //   not using this in Chrome at all, but keeping in case expose
+                /<dt>/gu,
+                '\n<dt>'
+              )
+            ], {type: 'text/html'});
+            const url = window.URL.createObjectURL(blob);
+            const a = jml('a', {
+              hidden: true,
+              download: 'bookmarks.html',
+              href: url
+            }, $('#main'));
+            a.click();
+            URL.revokeObjectURL(url);
             $('#loading').hidden = true;
-            $('#steps').hidden = false;
             return;
           }
 
-          const date = Date.now();
-          const ADD_DATE = date;
-          const LAST_MODIFIED = date;
-          const blob = new Blob([
-            new XMLSerializer().serializeToString(
-              jml({$document: {
-                $DOCTYPE: {name: 'NETSCAPE-Bookmark-file-1'},
-                title: l('Bookmarks'),
-                body: [
-                  ['h1', [l('Bookmarks_Menu')]],
-                  ...fieldAliasOrNames.flatMap(({groupName, worksToFields}) => {
-                    return [
-                      ['dt', [
-                        ['h3', {
-                          ADD_DATE,
-                          LAST_MODIFIED
-                        }, [
-                          groupName
-                        ]]
-                      ]],
-                      ['dl', [
-                        ['p'],
-                        ...worksToFields.map(({fieldAliasOrNames, workName, shortcut: SHORTCUTURL}) => {
-                          // Todo (low): Add anchor, etc. (until handled by `work-startEnd`); &aqdas-anchor1-1=2&anchorfield1=Paragraph
-                          // Todo: option for additional browse field groups (startEnd2, etc.)
-                          // Todo: For link text, use `heading` or `alias` from metadata files in place of workName (requires loading all metadata files though)
-                          // Todo: Make Chrome NativeExt add-on to manipulate its search engines (to read a bookmarks file from Firefox properly, i.e., including keywords) https://www.makeuseof.com/answers/export-google-chrome-search-engines-address-bar/
+          const urls = fieldAliasOrNames.flatMap(({groupName, worksToFields}) => {
+            return worksToFields.map(({fieldAliasOrNames, workName, shortcut: SHORTCUTURL}) => {
+              const url = getUrlForFieldAliasOrNames({
+                workName, fieldAliasOrNames
+              });
+              return {
+                short_name: workName,
+                keyword: SHORTCUTURL,
+                url
+              };
+            });
+          });
+          // Keep `var` instead of `let`/`const` so can be re-pasted if needed
+          $('#code').value = `  var searchEngines = ${JSON.stringify(urls)};
 
-                          const url = getUrlForFieldAliasOrNames({
-                            workName, fieldAliasOrNames
-                          });
-
-                          return ['dt', [
-                            ['a', {
-                              href: url,
-                              ADD_DATE,
-                              LAST_MODIFIED,
-                              SHORTCUTURL
-                            }, [
-                              workName
-                            ]]
-                          ]];
-                        })
-                      ]]
-                    ];
-                  })
-                ]
-              }})
-            ).replace(
-              // Chrome has a quirk that requires this (and not
-              //   just any whitespace)
-              // We're not getting the keywords with Chrome,
-              //   but at least usable for bookmarks (though
-              //   not the groups apparently); update: actually, now we're
-              //   not using this in Chrome at all, but keeping in case expose
-              /<dt>/gu,
-              '\n<dt>'
-            )
-          ], {type: 'text/html'});
-          const url = window.URL.createObjectURL(blob);
-          const a = jml('a', {
-            hidden: true,
-            download: 'bookmarks.html',
-            href: url
-          }, $('#main'));
-          a.click();
-          URL.revokeObjectURL(url);
+searchEngines.forEach(({ short_name, keyword, url }) => {
+// Actual search engine import magic
+chrome.send('searchEngineEditStarted', [-1]);
+chrome.send('searchEngineEditCompleted', [short_name, keyword, url]);
+});`;
           $('#loading').hidden = true;
+          $('#steps').hidden = false;
         }
       }
     }, [l('Generate_bookmarks')]]

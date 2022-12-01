@@ -3,7 +3,7 @@ describe('Languages page', () => {
     cy.visit('http://localhost:8000/index-instrumented.html');
   });
 
-  it('Accessibility', function () {
+  it('passes accessibility', function () {
     // See https://github.com/component-driven/cypress-axe
     cy.injectAxe();
     cy.configureAxe({

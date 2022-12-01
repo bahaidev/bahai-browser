@@ -1,4 +1,4 @@
-describe('Work select page', () => {
+describe('Work display page', () => {
   beforeEach(async () => {
     if (!window.navigator || !navigator.serviceWorker) {
       return null;

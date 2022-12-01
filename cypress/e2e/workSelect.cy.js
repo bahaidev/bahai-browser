@@ -78,6 +78,9 @@ describe('Work select page', () => {
     cy.get('h2').contains(
       'Works to offline', {timeout: 20000}
     ).should('not.be.visible');
+    cy.get(
+      '#installationLogContainer', {timeout: 20000}
+    ).should('not.be.visible');
     cy.get('div').contains(
       'Choose the Writings you wish to browse'
     ).should('be.visible');

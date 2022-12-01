@@ -120,7 +120,14 @@ const tb = new TextBrowser({
     ['button', {
       title: l('bookmark_generation_tooltip'),
       $on: {
-        async click () { // Todo: Give option to edit (keywords and work URLs)
+        async click (e) { // Todo: Give option to edit (keywords and work URLs)
+          if ($('#generate-results').hidden) {
+            $('#generate-results').hidden = false;
+          } else {
+            $('#generate-results').hidden = true;
+            return;
+          }
+
           const getUrlForFieldAliasOrNames = ({
             fieldAliasOrNames, workName
           }) => {
@@ -132,8 +139,6 @@ const tb = new TextBrowser({
             });
             return replaceHash(paramsCopy) + `&work=${workName}&${workName}-startEnd1=%s`; // %s will be escaped if set as param; also add changeable workName here
           };
-
-          $('#generate-results').hidden = false;
 
           const fieldAliasOrNames = await getFieldAliasOrNames();
 

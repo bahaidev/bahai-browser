@@ -74,4 +74,25 @@ describe('Work select page', () => {
     // German
     cy.get('#checked7').should('not.be.checked');
   });
+
+  it('generates bookmarks', function () {
+    cy.get('button').contains('Preferences').click();
+
+    cy.get('#code').should('not.be.visible');
+    cy.get('button').contains('Generate bookmarks').click();
+    cy.get('#code').should('be.visible');
+
+    cy.get('#copy').click().focus();
+
+    return cy.window().then(async (win) => {
+      const text = await win.navigator.clipboard.readText();
+      expect(text).to.contain('var searchEngines').and.contain(
+        '"short_name":"aqdas"'
+      );
+    }).then(() => {
+      cy.get('button').contains('Generate bookmarks').click();
+      // Todo: Should not be failing but is
+      // cy.get('#code').should('not.be.visible');
+    });
+  });
 });

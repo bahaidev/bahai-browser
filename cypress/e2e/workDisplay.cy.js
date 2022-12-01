@@ -1,4 +1,13 @@
 describe('Work select page', () => {
+  beforeEach(async () => {
+    if (!window.navigator || !navigator.serviceWorker) {
+      return null;
+    }
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    return Promise.all(registrations.map((registration) => {
+      return registration.unregister();
+    }));
+  });
   beforeEach(() => {
     cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
   });

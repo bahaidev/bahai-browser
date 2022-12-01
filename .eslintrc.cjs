@@ -23,6 +23,7 @@ module.exports = {
       'location.host',
       'location.protocol',
       'navigator.clipboard',
+      'navigator.serviceWorker',
       'Object.entries',
       'Object.values',
       'Promise',

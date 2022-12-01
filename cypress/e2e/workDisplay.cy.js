@@ -110,6 +110,11 @@ describe('Work display page', () => {
       cy.get('#checked4').should('be.checked');
       // German
       cy.get('#checked7').should('not.be.checked');
+
+      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
+
+      cy.get('#prefLangs').find('option[value="en-US"]').should('be.selected');
+      cy.get('#prefLangs').find('option[value="ar"]').should('be.selected');
     });
 
     it('generates bookmarks', function () {

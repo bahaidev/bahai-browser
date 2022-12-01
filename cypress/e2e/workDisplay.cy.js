@@ -18,4 +18,15 @@ describe('Work select page', () => {
     cy.get('div[role=main]'); // Wait until available before checking a11y
     cy.checkA11y();
   });
+
+  it('Sets wiki user name', function () {
+    cy.get('button').contains('Preferences').click();
+
+    cy.get('input#wikilinks-existing-username')
+      .click().type('Brettz9').blur().should(() => {
+        expect(
+          localStorage.getItem('bahai-browser-wikilinks-existing-username')
+        ).to.eq('Brettz9');
+      });
+  });
 });

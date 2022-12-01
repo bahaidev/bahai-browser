@@ -79,7 +79,8 @@ const tb = new TextBrowser({
                 try {
                   await navigator.clipboard.writeText($('#code').value);
                   $('.msg-success').hidden = false;
-                } catch (err) {
+                } /* istanbul ignore next -- How to trigger? */ catch (err) {
+                  /* istanbul ignore next -- How to trigger? */
                   $('.msg-error').hidden = false;
                 } finally {
                   closeMessages();
@@ -111,6 +112,7 @@ const tb = new TextBrowser({
           ]]
         ]]
       ]]
+      /* istanbul ignore next -- How to trigger? */
       : ['div', {id: 'generate-results', hidden: 'true'}, [
         ['div', {id: 'loading'}, [
           'Loading...'

@@ -47,6 +47,13 @@ describe('Work select page', () => {
     cy.get('button').contains('Preferences').click();
     cy.get('input#hideFormattingSection').click();
     cy.get('#advancedformatting').should('not.be.visible');
+    cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
+    cy.get('#advancedformatting').should('not.be.visible');
+  });
+
+  it('hides formatting section with URL parameter', function () {
+    cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&formatting=0');
+    cy.get('#advancedformatting').should('not.be.visible');
   });
 
   it.skip('localizes parameter names', function () {
@@ -86,6 +93,9 @@ describe('Work select page', () => {
 
     return cy.window().then(async (win) => {
       const text = await win.navigator.clipboard.readText();
+      cy.get('.msg-success').should('be.visible');
+      // Hidden after a timeout
+      cy.get('.msg-success').should('not.be.visible');
       expect(text).to.contain('var searchEngines').and.contain(
         '"short_name":"aqdas"'
       );

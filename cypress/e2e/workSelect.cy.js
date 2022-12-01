@@ -1,14 +1,20 @@
 describe('Work select page', () => {
-  beforeEach(() => {
-    cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US');
-  });
   beforeEach(async () => {
-    if (window.navigator && navigator.serviceWorker) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      registrations.forEach((registration) => {
-        registration.unregister();
-      });
+    if (!window.navigator || !navigator.serviceWorker) {
+      return null;
     }
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    return Promise.all(registrations.map((registration) => {
+      return registration.unregister();
+    }));
+  });
+  beforeEach(() => {
+    cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US', {
+      onBeforeLoad (win) {
+        // eslint-disable-next-line no-proto -- Needed here
+        delete win.navigator.__proto__.ServiceWorker;
+      }
+    });
   });
 
   it('passes accessibility', function () {

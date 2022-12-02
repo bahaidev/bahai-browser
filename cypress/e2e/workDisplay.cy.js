@@ -77,7 +77,8 @@ describe('Work display page', () => {
       cy.get('button').contains('Preferences').click();
       cy.get('input#hideFormattingSection').click();
       cy.get('#advancedformatting').should('not.be.visible');
-      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
+      // Add our own param to ensure not caching
+      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&nocache');
       cy.get('#advancedformatting').should('not.be.visible');
     });
 
@@ -111,7 +112,8 @@ describe('Work display page', () => {
       // German
       cy.get('#checked7').should('not.be.checked');
 
-      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
+      // Add our own param to ensure not caching
+      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&nocache');
 
       cy.get('#prefLangs').find('option[value="en-US"]').should('be.selected');
       cy.get('#prefLangs').find('option[value="ar"]').should('be.selected');

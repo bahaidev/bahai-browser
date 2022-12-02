@@ -162,6 +162,15 @@ describe('Work display page', () => {
       cy.get('#advancedformatting').should('not.be.visible');
     });
 
+    it('reveal formatting section', function () {
+      cy.get('#advancedformatting').should('be.visible');
+      cy.get('button').contains('Preferences').click();
+      cy.get('input#hideFormattingSection').click();
+      cy.get('#advancedformatting').should('not.be.visible');
+      cy.get('input#hideFormattingSection').click();
+      cy.get('#advancedformatting').should('be.visible');
+    });
+
     it('hides formatting section with URL parameter', function () {
       cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&formatting=0');
       cy.get('#advancedformatting').should('not.be.visible');

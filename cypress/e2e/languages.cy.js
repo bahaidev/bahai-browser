@@ -51,10 +51,30 @@ describe('Languages page', () => {
     });
   });
 
-  it.skip('Redirects to the work selection page', function () {
-    cy.get('select[name="lang"]').select('en-US');
+  it('Redirects to the work selection page', function () {
+    // Clicking or selecting the option is not sufficient for Cypress;
+    //  likewise where `selectedOptions` is used
+    cy.get('select[name="lang"]').invoke('prop', 'selectedIndex', 0);
+    cy.get('select[name="lang"] option[value="en-US"]').click();
+
     cy.location('hash', {
       timeout: 10000
     }).should('eq', '#lang=en-US');
   });
+
+  it(
+    'Shows selected item still highlighted if using back button', function () {
+      // Clicking or selecting the option is not sufficient for Cypress;
+      //  likewise where `selectedOptions` is used
+      cy.get('select[name="lang"]').invoke('prop', 'selectedIndex', 0);
+      cy.get('select[name="lang"] option[value="en-US"]').click();
+      cy.location('hash', {
+        timeout: 10000
+      }).should('eq', '#lang=en-US');
+      cy.go('back');
+      cy.get(
+        'select[name="lang"] option[value="en-US"]'
+      ).should('be.selected');
+    }
+  );
 });

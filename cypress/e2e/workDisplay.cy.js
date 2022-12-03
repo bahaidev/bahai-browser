@@ -29,6 +29,59 @@ describe('Work display page', () => {
       cy.checkA11y();
     });
 
+    it('submits query by click', function () {
+      cy.get('#aqdas-start1-1').type('2');
+      cy.get('#aqdas-end1-1').type('15');
+      cy.get('input[type="submit"][value="Go"]').click();
+      cy.location('hash', {
+        timeout: 10000
+      }).should(
+        'eq',
+        '#lang=en-US&work=aqdas&aqdas-start1-1=2&aqdas-end1-1=15&aqdas-' +
+        'anchor1-1=&anchorfield1=Indexes+%28English%29&field1=Indexes+%28' +
+        'English%29&interlin1=&css1=&field2=Tooltips+%28English%29&interlin2' +
+        '=&css2=&field3=Locally-stored+notes&interlin3=&css3=&field4=Speech' +
+        '+Arabic&interlin4=&css4=&field5=Paragraph&interlin5=&css5=&field6=' +
+        'English&interlin6=&css6=&field7=German&interlin7=&css7=&field8=' +
+        'Arabic&interlin8=&css8=&field9=Editable+wiki+page&interlin9=&css9=' +
+        '&field10=Links+to+wiki&interlin10=&css10=&field11=Links+to+user+' +
+        'wiki&interlin11=&css11=&colorName=Black&color=%23&bgcolorName=White' +
+        '&bgcolor=%23&fontSeq=Times+New+Roman%2C+serif&fontstyle=normal&' +
+        'fontvariant=normal&fontweight=normal&fontsize=&fontstretch=normal' +
+        '&letterspacing=normal&lineheight=normal&header=n&footer=0&caption=0' +
+        '&border=1&interlintitle=1&interlintitle_css=&pagecss=&outputmode=' +
+        'table&rand=No&checked1=No&checked2=Yes&checked3=Yes&checked4=No&' +
+        'checked5=Yes&checked6=Yes&checked7=Yes&checked8=Yes&checked9=No&' +
+        'checked10=Yes&checked11=Yes&headerfooterfixed=No&result=Yes'
+      );
+    });
+
+    it('submits query by enter', function () {
+      cy.get('#aqdas-start1-1').type('2');
+      cy.get('#aqdas-end1-1').type('15{enter}');
+      cy.location('hash', {
+        timeout: 10000
+      }).should(
+        'eq',
+        '#lang=en-US&work=aqdas&aqdas-start1-1=2&aqdas-end1-1=15&aqdas-' +
+        'anchor1-1=&anchorfield1=Indexes+%28English%29&field1=Indexes+%28' +
+        'English%29&interlin1=&css1=&field2=Tooltips+%28English%29&interlin2' +
+        '=&css2=&field3=Locally-stored+notes&interlin3=&css3=&field4=Speech' +
+        '+Arabic&interlin4=&css4=&field5=Paragraph&interlin5=&css5=&field6=' +
+        'English&interlin6=&css6=&field7=German&interlin7=&css7=&field8=' +
+        'Arabic&interlin8=&css8=&field9=Editable+wiki+page&interlin9=&css9=' +
+        '&field10=Links+to+wiki&interlin10=&css10=&field11=Links+to+user+' +
+        'wiki&interlin11=&css11=&colorName=Black&color=%23&bgcolorName=White' +
+        '&bgcolor=%23&fontSeq=Times+New+Roman%2C+serif&fontstyle=normal&' +
+        'fontvariant=normal&fontweight=normal&fontsize=&fontstretch=normal' +
+        '&letterspacing=normal&lineheight=normal&header=n&footer=0&caption=0' +
+        '&border=1&interlintitle=1&interlintitle_css=&pagecss=&outputmode=' +
+        'table&rand=No&checked1=No&checked2=Yes&checked3=Yes&checked4=No&' +
+        'checked5=Yes&checked6=Yes&checked7=Yes&checked8=Yes&checked9=No&' +
+        'checked10=Yes&checked11=Yes&headerfooterfixed=No&result=Yes'
+      );
+    });
+
     it('"Check all" enables all fields', function () {
       // Indexes
       cy.get('input#checked1').should('not.be.checked');
@@ -48,11 +101,48 @@ describe('Work display page', () => {
       cy.get('input#checked1').should('not.be.checked');
       cy.get('input#checked2').should('not.be.checked');
     });
+
+    it('Retains fields after back button', function () {
+      // Indexes
+      cy.get('input#checked1').should('not.be.checked');
+      // Tooltips (English)
+      cy.get('input#checked2').should('be.checked');
+      cy.get('input[type="button"][value="Check all"]').click();
+
+      cy.get('#aqdas-start1-1').type('2');
+      cy.get('#aqdas-end1-1').type('15{enter}');
+
+      cy.go('back');
+
+      cy.get('input#checked1').should('be.checked');
+      cy.get('input#checked2').should('be.checked');
+    });
+
+    it('saves settings as URL', function () {
+      cy.get('input[type="button"][value="Check all"]').click();
+      cy.get('#settings-URL').should('be.empty');
+      cy.get('input[type="button"][value="Save settings as URL"]').click();
+      cy.get('#settings-URL').should(
+        'have.value',
+        'http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&aqdas-start1-1=&aqdas-end1-1=&aqdas-anchor1-1=&anchorfield1=Indexes+%28English%29&field1=Indexes+%28English%29&interlin1=&css1=&field2=Tooltips+%28English%29&interlin2=&css2=&field3=Locally-stored+notes&interlin3=&css3=&field4=Speech+Arabic&interlin4=&css4=&field5=Paragraph&interlin5=&css5=&field6=English&interlin6=&css6=&field7=German&interlin7=&css7=&field8=Arabic&interlin8=&css8=&field9=Editable+wiki+page&interlin9=&css9=&field10=Links+to+wiki&interlin10=&css10=&field11=Links+to+user+wiki&interlin11=&css11=&colorName=Black&color=%23&bgcolorName=White&bgcolor=%23&fontSeq=Times+New+Roman%2C+serif&fontstyle=normal&fontvariant=normal&fontweight=normal&fontsize=&fontstretch=normal&letterspacing=normal&lineheight=normal&header=n&footer=0&caption=0&border=1&interlintitle=1&interlintitle_css=&pagecss=&outputmode=table&checked1=Yes&checked2=Yes&checked3=Yes&checked4=Yes&checked5=Yes&checked6=Yes&checked7=Yes&checked8=Yes&checked9=Yes&checked10=Yes&checked11=Yes&headerfooterfixed=No'
+      );
+    });
+
+    it('copies shortcut URL', function () {
+      cy.get('button').contains('Copy shortcut URL').click();
+      return cy.window().then(async (win) => {
+        const text = await win.navigator.clipboard.readText();
+        expect(text).to.equal('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&anchorfield1=Indexes+%28English%29&field1=Indexes+%28English%29&interlin1=&css1=&field2=Tooltips+%28English%29&interlin2=&css2=&field3=Locally-stored+notes&interlin3=&css3=&field4=Speech+Arabic&interlin4=&css4=&field5=Paragraph&interlin5=&css5=&field6=English&interlin6=&css6=&field7=German&interlin7=&css7=&field8=Arabic&interlin8=&css8=&field9=Editable+wiki+page&interlin9=&css9=&field10=Links+to+wiki&interlin10=&css10=&field11=Links+to+user+wiki&interlin11=&css11=&colorName=Black&color=%23&bgcolorName=White&bgcolor=%23&fontSeq=Times+New+Roman%2C+serif&fontstyle=normal&fontvariant=normal&fontweight=normal&fontsize=&fontstretch=normal&letterspacing=normal&lineheight=normal&header=n&footer=0&caption=0&border=1&interlintitle=1&interlintitle_css=&pagecss=&outputmode=table&rand=No&checked1=No&checked2=Yes&checked3=Yes&checked4=No&checked5=Yes&checked6=Yes&checked7=Yes&checked8=Yes&checked9=No&checked10=Yes&checked11=Yes&headerfooterfixed=No&result=Yes&work=aqdas&aqdas-startEnd1=%s');
+      });
+    });
   });
 
   describe('Multiple browse fields', function () {
-    it('builds multiple browse fields', function () {
+    beforeEach(() => {
       cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=quran');
+    });
+
+    it('builds multiple browse fields', function () {
       cy.get('#quran-start1-1');
       cy.get('#quran-start1-2');
       cy.get('#quran-start2-1');
@@ -60,7 +150,6 @@ describe('Work display page', () => {
     });
 
     it('has start field trigger default for end field', function () {
-      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=quran');
       cy.get('#quran-end1-1').should('be.empty');
       cy.get('#quran-start1-1').type('The Cow (2)').blur();
       cy.get('#quran-end1-1').should('have.value', 'The Cow (2)');
@@ -129,6 +218,7 @@ describe('Work display page', () => {
     beforeEach(() => {
       cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
     });
+
     it('hides preferences', function () {
       cy.get('#preferences').should('not.be.visible');
       cy.get('button').contains('Preferences').click();
@@ -176,10 +266,19 @@ describe('Work display page', () => {
       cy.get('#advancedformatting').should('not.be.visible');
     });
 
-    it.skip('localizes parameter names', function () {
+    it('localizes parameter names', function () {
       cy.get('button').contains('Preferences').click();
       cy.get('input#localizeParamNames').click();
+      cy.get('input#localizeParamNames').click();
 
+      cy.get('input#localizeParamNames').should('be.checked').should(() => {
+        expect(
+          localStorage.getItem('bahaiwritings-localizeParamNames')
+        ).to.eq('true');
+      });
+    });
+
+    it.skip('checks localized parameter names', function () {
       // Todo: complete by checking URL params
     });
 
@@ -230,6 +329,55 @@ describe('Work display page', () => {
         // Todo: Should not be failing but is
         // cy.get('#code').should('not.be.visible');
       });
+    });
+  });
+
+  describe('Offlining', function () {
+    beforeEach((done) => {
+      const dbName = 'bahaiwritings-textbrowser-cache-data';
+      const req = indexedDB.deleteDatabase(dbName);
+      req.onsuccess = () => {
+        done();
+      };
+    });
+    beforeEach(() => {
+      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
+    });
+
+    it('indicates offline available status', function () {
+      cy.get('#offline-available').should('not.be.checked');
+      cy.get(
+        '#installationLogContainer'
+      ).should('not.be.visible');
+      cy.get('#offline-available').click();
+      cy.get(
+        '#installationLogContainer'
+      ).should('be.visible');
+
+      cy.get(
+        '#installationLogContainer',
+        {
+          timeout: 25000
+        }
+      ).should('not.be.visible');
+
+      cy.get('#offline-available', {
+        timeout: 25000
+      }).should('be.checked');
+
+      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&nocache');
+      cy.get('#offline-available', {
+        timeout: 25000
+      }).should('be.checked');
+      cy.get(
+        '#installationLogContainer'
+      ).should('not.be.visible');
+      cy.get('#offline-available').click({
+        timeout: 25000
+      });
+      cy.get('#offline-available', {
+        timeout: 25000
+      }).should('not.be.checked');
     });
   });
 });

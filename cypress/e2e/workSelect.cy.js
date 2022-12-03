@@ -54,6 +54,20 @@ describe('Work select page', () => {
     }
   );
 
+  it('redirects to the work display page', function () {
+    cy.get(
+      'select[data-name="writings"] option[value="aqdas"]'
+    ).should('not.be.selected');
+    cy.get('select[data-name="writings"]').select('aqdas');
+    cy.location('hash', {
+      timeout: 10000
+    }).should('eq', '#lang=en-US&work=aqdas');
+    cy.go('back');
+    cy.get(
+      'select[data-name="writings"] option[value="aqdas"]'
+    ).should('be.selected');
+  });
+
   it('"Check all" checks all works', function () {
     cy.get('button').contains('Choose works to take offline').click();
     cy.get('input[value="aqdas"]').should('not.be.checked');
@@ -76,10 +90,10 @@ describe('Work select page', () => {
     cy.get('input[value="hidden words"]').click();
     cy.get('button.submit').click();
     cy.get('h2').contains(
-      'Works to offline', {timeout: 20000}
+      'Works to offline', {timeout: 25000}
     ).should('not.be.visible');
     cy.get(
-      '#installationLogContainer', {timeout: 20000}
+      '#installationLogContainer', {timeout: 25000}
     ).should('not.be.visible');
     cy.get('div').contains(
       'Choose the Writings you wish to browse'

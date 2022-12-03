@@ -48,7 +48,7 @@
     "server": "textbrowser --allowPlugins --namespace=bahaiwritings --httpServer=../../../extraServers/indexServer.js --expressServer ../../../extraServers/expressServer.js",
     "server-activate": "textbrowser --allowPlugins --nodeActivate  --namespace=bahaiwritings",
     "dev-server": "node ../textbrowser/server/main.js --allowPlugins --namespace=bahaiwritings --httpServer=../../bahaiwritings/extraServers/indexServer.js",
-    "copy-tb": "cp -a ../textbrowser/dist/. node_modules/textbrowser/dist/ && cp -a ../textbrowser/locales/. node_modules/textbrowser/locales/ && cp -a ../textbrowser/server/. node_modules/textbrowser/server/ && chmod -R 755 node_modules/textbrowser/server/",
+    "copy-tb": "cp -a ../textbrowser/dist/. node_modules/textbrowser/dist/ && cp -a ../textbrowser/resources/. node_modules/textbrowser/resources/ && cp -a ../textbrowser/locales/. node_modules/textbrowser/locales/ && cp -a ../textbrowser/server/. node_modules/textbrowser/server/ && chmod -R 755 node_modules/textbrowser/server/",
     "test": "npm run eslint && run-p server cypress"
   },
   "dependencies": {

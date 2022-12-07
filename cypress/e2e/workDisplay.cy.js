@@ -375,9 +375,22 @@ describe('Work display page', () => {
       cy.get('#offline-available').click({
         timeout: 25000
       });
+
+      cy.get(
+        '#installationLogContainer'
+      ).should('be.visible');
+
+      cy.get(
+        '#installationLogContainer',
+        {
+          timeout: 25000
+        }
+      ).should('not.be.visible');
+
       cy.get('#offline-available', {
         timeout: 25000
       }).should('not.be.checked');
+      cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas&nocache2');
     });
   });
 });

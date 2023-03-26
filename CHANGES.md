@@ -1,5 +1,9 @@
 # CHANGES to `bahai-browser`
 
+## ?
+
+- chore: update deps. and devDeps.
+
 ## 0.3.0
 
 - refactor: use updated API for service worker

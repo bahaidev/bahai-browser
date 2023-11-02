@@ -74,7 +74,7 @@ npm install bahai-browser
 1.  Upon update completion have service worker read from the (latest
     section of) `CHANGES.md`
 
-1.  Add more testcafe tests (switch to Cypress)
+1.  Add more Cypress tests?
 
 1.  Add disableable "Powered by TextBrowser" message on non-results pages with
     link to that repo.

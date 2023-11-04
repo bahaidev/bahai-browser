@@ -1,4 +1,4 @@
-/* eslint-disable no-alert -- Simple errors */
+/* eslint-disable no-alert, camelcase -- Simple errors; Chrome-extension friendly */
 const locales = {
   'en-US': {
     loading: 'Loading...',

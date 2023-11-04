@@ -122,7 +122,7 @@ const tb = new TextBrowser({
     ['button', {
       title: l('bookmark_generation_tooltip'),
       $on: {
-        async click (e) { // Todo: Give option to edit (keywords and work URLs)
+        async click () { // Todo: Give option to edit (keywords and work URLs)
           if ($('#generate-results').hidden) {
             $('#generate-results').hidden = false;
           } else {
@@ -194,14 +194,14 @@ const tb = new TextBrowser({
                     })
                   ]
                 }})
-              ).replace(
+              ).replaceAll(
                 // Chrome has a quirk that requires this (and not
                 //   just any whitespace)
                 // We're not getting the keywords with Chrome,
                 //   but at least usable for bookmarks (though
                 //   not the groups apparently); update: actually, now we're
                 //   not using this in Chrome at all, but keeping in case expose
-                /<dt>/gu,
+                '<dt>',
                 '\n<dt>'
               )
             ], {type: 'text/html'});
@@ -217,12 +217,13 @@ const tb = new TextBrowser({
             return;
           }
 
-          const urls = fieldAliasOrNames.flatMap(({groupName, worksToFields}) => {
+          const urls = fieldAliasOrNames.flatMap(({worksToFields}) => {
             return worksToFields.map(({fieldAliasOrNames, workName, shortcut: SHORTCUTURL}) => {
               const url = getUrlForFieldAliasOrNames({
                 workName, fieldAliasOrNames
               });
               return {
+                // eslint-disable-next-line camelcase --- Using for i18n
                 short_name: workName,
                 keyword: SHORTCUTURL,
                 url

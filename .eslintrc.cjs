@@ -8,6 +8,8 @@ module.exports = {
   },
   settings: {
     polyfills: [
+      'Array.forEach',
+      'Array.map',
       'Blob',
       'console',
       'Date.now',
@@ -18,6 +20,7 @@ module.exports = {
       'document.querySelectorAll',
       'Error',
       'fetch',
+      'indexedDB',
       'JSON',
       'location.href',
       'location.host',
@@ -62,6 +65,12 @@ module.exports = {
     {
       files: ['test/bahaiwritingsTests.js'],
       extends: ['ash-nazg/sauron-node-overrides', 'plugin:cypress/recommended']
+    },
+    {
+      files: 'plugins/**',
+      rules: {
+        'no-unused-vars': 'off'
+      }
     }
   ],
   env: {
@@ -69,7 +78,7 @@ module.exports = {
     browser: true
   },
   rules: {
-    'max-len': 0,
+    '@stylistic/max-len': 0,
     'no-console': 0,
     'no-shadow': 0,
     // Reenable and add descriptions for `eslint-env`

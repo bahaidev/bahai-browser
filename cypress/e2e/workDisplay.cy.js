@@ -151,7 +151,7 @@ describe('Work display page', () => {
 
     it('has start field trigger default for end field', function () {
       cy.get('#quran-end1-1').should('be.empty');
-      cy.get('#quran-start1-1').type('The Cow (2)').blur();
+      cy.typeAndBlur('#quran-start1-1', 'The Cow (2)');
       cy.get('#quran-end1-1').should('have.value', 'The Cow (2)');
     });
   });
@@ -230,12 +230,14 @@ describe('Work display page', () => {
     it('sets wiki user name', function () {
       cy.get('button').contains('Preferences').click();
 
-      cy.get('input#wikilinks-existing-username')
-        .click().type('Brettz9').blur().should(() => {
-          expect(
-            localStorage.getItem('bahai-browser-wikilinks-existing-username')
-          ).to.eq('Brettz9');
-        });
+      cy.get('input#wikilinks-existing-username').click();
+      cy.get('input#wikilinks-existing-username').type('Brettz9');
+      cy.get('input#wikilinks-existing-username').blur();
+      cy.get('input#wikilinks-existing-username').should(() => {
+        expect(
+          localStorage.getItem('bahai-browser-wikilinks-existing-username')
+        ).to.eq('Brettz9');
+      });
     });
 
     it.skip('checks impact of setting wiki user name', function () {
@@ -314,7 +316,8 @@ describe('Work display page', () => {
       cy.get('button').contains('Generate bookmarks').click();
       cy.get('#code').should('be.visible');
 
-      cy.get('#copy').click().focus();
+      cy.get('#copy').click();
+      cy.get('#copy').focus();
 
       return cy.window().then(async (win) => {
         const text = await win.navigator.clipboard.readText();

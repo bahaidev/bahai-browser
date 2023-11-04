@@ -81,9 +81,9 @@ describe('bahaiwritings Tests', function () {
 
     // This circular reference wasn't being fixed by the JsonRefs preprocessor,
     //   so we have to graft it ourselves after the fact
-    filesSchema.properties['localization-strings']
-      .patternProperties['.*'].patternProperties['.*']
-      .anyOf[2].patternProperties['.*'].anyOf[2].$ref =
+    filesSchema.properties['localization-strings'].
+      patternProperties['.*'].patternProperties['.*'].
+      anyOf[2].patternProperties['.*'].anyOf[2].$ref =
         JsonRefs.pathToPtr([
           'properties', 'localization-strings', 'patternProperties', '.*',
           'patternProperties', '.*', 'anyOf', '2'
@@ -213,8 +213,8 @@ describe('bahaiwritings Tests', function () {
 
     // JsonRefs does not resolve into a circular local path, so we do so
     //   ourselves
-    metadataSchemaFile.properties['localization-strings']
-      .patternProperties['.*'].anyOf[2].$ref =
+    metadataSchemaFile.properties['localization-strings'].
+      patternProperties['.*'].anyOf[2].$ref =
         JsonRefs.pathToPtr([
           'properties', 'localization-strings'
         ]);
@@ -267,8 +267,8 @@ describe('bahaiwritings Tests', function () {
 
     // This circular reference wasn't being converted to a pure path by
     //   JsonRefs, so we have to alter it ourselves after the fact
-    schema.properties['localization-strings']
-      .patternProperties['.*'].anyOf[2].$ref =
+    schema.properties['localization-strings'].
+      patternProperties['.*'].anyOf[2].$ref =
         JsonRefs.pathToPtr([
           'properties', 'localization-strings'
         ]);
@@ -289,7 +289,7 @@ describe('bahaiwritings Tests', function () {
     // assert.strictEqual(diff.length, 0);
 
     const schemas = results.slice(2);
-    schemas.forEach((schma, i) => {
+    schemas.forEach((schma) => {
       const vlid = validate(jsonSchema, schma, extraSchemas, {
         allowUnionTypes: true
       });

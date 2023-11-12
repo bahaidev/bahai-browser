@@ -1,6 +1,6 @@
 # CHANGES to `bahai-browser`
 
-## ?
+## 0.4.0
 
 - chore: update deps. and devDeps.
 

@@ -3,6 +3,6 @@
 import swHelper from './node_modules/textbrowser/dist/sw-helper.js';
 
 // IMPORTANT: Keep this comment and increment this number to trigger
-//              a worker change: 2
+//              a worker change: 3
 
 swHelper(self);

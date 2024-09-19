@@ -240,6 +240,7 @@ describe('Work display page', () => {
       });
     });
 
+    // eslint-disable-next-line mocha/no-skipped-tests -- Todo
     it.skip('checks impact of setting wiki user name', function () {
       // Todo: Check impact of settingw wiki user name
     });
@@ -280,6 +281,7 @@ describe('Work display page', () => {
       });
     });
 
+    // eslint-disable-next-line mocha/no-skipped-tests -- Todo
     it.skip('checks localized parameter names', function () {
       // Todo: complete by checking URL params
     });
@@ -343,6 +345,7 @@ describe('Work display page', () => {
         done();
       };
     });
+    // eslint-disable-next-line mocha/no-sibling-hooks -- Different for Cypress
     beforeEach(() => {
       cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US&work=aqdas');
     });

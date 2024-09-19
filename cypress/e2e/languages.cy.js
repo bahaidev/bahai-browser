@@ -8,6 +8,7 @@ describe('Languages page', () => {
       return registration.unregister();
     }));
   });
+  // eslint-disable-next-line mocha/no-sibling-hooks -- Different for Cypress
   beforeEach(() => {
     cy.visit('http://localhost:8000/index-instrumented.html');
   });

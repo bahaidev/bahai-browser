@@ -35,11 +35,9 @@ function validate (schema, data, extraSchemas = [], additionalOptions = {}) {
     });
     valid = ajv.validate(schema, data);
   } catch (e) {
-    // eslint-disable-next-line no-console -- CLI
     console.log(e);
   } finally {
     if (!valid && ajv.errors?.length) {
-      // eslint-disable-next-line no-console -- CLI
       console.log(JSON.stringify(ajv.errors, null, 2));
     }
   }
@@ -199,7 +197,7 @@ describe('bahaiwritings Tests', function () {
       tableFiles,
       [null]
     ].map((files) => {
-      // eslint-disable-next-line no-return-assign -- Convenient
+      // eslint-disable-next-line no-return-assign, sonarjs/no-nested-assignment -- Convenient
       return results.slice(cursor, cursor += files.length);
     });
 

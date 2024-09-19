@@ -1,4 +1,4 @@
-/* eslint-disable import/unambiguous, unicorn/no-empty-file -- WIP */
+/* eslint-disable unicorn/no-empty-file -- WIP */
 /*
 6: {
     0: [null,null,null,null,null,null,null,null,null,null,null,null,",",null,null,null],

@@ -8,6 +8,7 @@ describe('Work select page', () => {
       return registration.unregister();
     }));
   });
+  // eslint-disable-next-line mocha/no-sibling-hooks -- Different for Cypress
   beforeEach(() => {
     cy.visit('http://localhost:8000/index-instrumented.html#lang=en-US', {
       onBeforeLoad (win) {
@@ -54,19 +55,22 @@ describe('Work select page', () => {
     }
   );
 
-  it('redirects to the work display page', function () {
-    cy.get(
-      'select[data-name="writings"] option[value="aqdas"]'
-    ).should('not.be.selected');
-    cy.get('select[data-name="writings"]').select('aqdas');
-    cy.location('hash', {
-      timeout: 10000
-    }).should('eq', '#lang=en-US&work=aqdas');
-    cy.go('back');
-    cy.get(
-      'select[data-name="writings"] option[value="aqdas"]'
-    ).should('be.selected');
-  });
+  it(
+    'redirects to the work display page (and keep state with back button)',
+    function () {
+      cy.get(
+        'select[data-name="writings"] option[value="aqdas"]'
+      ).should('not.be.selected');
+      cy.get('select[data-name="writings"]').select('aqdas');
+      cy.location('hash', {
+        timeout: 10000
+      }).should('eq', '#lang=en-US&work=aqdas');
+      cy.go('back');
+      cy.get(
+        'select[data-name="writings"] option[value="aqdas"]'
+      ).should('be.selected');
+    }
+  );
 
   it('"Check all" checks all works', function () {
     cy.get('button').contains('Choose works to take offline').click();

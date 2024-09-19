@@ -79,6 +79,7 @@ const tb = new TextBrowser({
                 try {
                   await navigator.clipboard.writeText($('#code').value);
                   $('.msg-success').hidden = false;
+                // eslint-disable-next-line no-unused-vars -- Ok
                 } /* istanbul ignore next -- How to trigger? */ catch (err) {
                   /* istanbul ignore next -- How to trigger? */
                   $('.msg-error').hidden = false;

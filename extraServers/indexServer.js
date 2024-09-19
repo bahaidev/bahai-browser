@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* eslint-env node -- Environment */
 import {join} from 'path';
 import getHttpQuery from 'httpquery';
 

@@ -1,5 +1,9 @@
 # CHANGES to `bahai-browser`
 
+## 0.5.1
+
+- chore: update deps. and devDeps.
+
 ## 0.5.0
 
 - chore: update `textbrowser`

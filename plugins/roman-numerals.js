@@ -10,7 +10,9 @@ If needing to add to add, can supply as with pm (which doesn't need as it alread
 }
 
 */
-
+/**
+ * @typedef {number} Integer
+ */
 /**
  *
  * @param {Integer} num
@@ -42,10 +44,11 @@ function convertToRoman (num) {
   return str;
 }
 
+/** @type {import('../types.js').GetCellData} */
 export const getCellData = function ({
   applicableFieldText, tr,
   fieldLang, meta
 }) {
-  return convertToRoman(applicableFieldText);
+  return convertToRoman(Number(applicableFieldText));
   // console.log('plugin');
 };

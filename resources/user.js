@@ -1,4 +1,4 @@
-import TextBrowser from '../node_modules/textbrowser/dist/index-es.js';
+import TextBrowser from 'textbrowser';
 
 // Todo: Add a favicon file (and remove empty one in HTML?)
 // import loadStylesheets from '../node_modules/load-stylesheets/dist/index-es.js';
@@ -34,6 +34,19 @@ const tb = new TextBrowser({
   trustFormatHTML: true,
   skipIndexedDB: false,
   interlinearSeparator: '<hr />', // Defaults to `<br /><br />`,
+  /**
+   * @param {{
+   *   $: (sel: string) => HTMLElement,
+   *   l: import('intl-dom').I18NCallback
+   *   jml: import('jamilih').jml,
+   *   paramsSetter: import('../types.js').ParamsSetter,
+   *   getDataForSerializingParamsAsURL: import('../types.js').GetDataForSerializingParamsAsURL,
+   *   work: string,
+   *   replaceHash: (paramsCopy: URLSearchParams) => string,
+   *   getFieldAliasOrNames: import('../types.js').GetFieldAliasOrNames
+   * }} cfg
+   * @returns {import('jamilih').JamilihArray}
+   */
   preferencesPlugin: ({
     $, l, jml, paramsSetter, getDataForSerializingParamsAsURL, work,
     replaceHash, getFieldAliasOrNames
@@ -44,7 +57,11 @@ const tb = new TextBrowser({
       ['input', {
         $on: {
           change (e) {
-            localStorage.setItem('bahai-browser-wikilinks-existing-username', e.target.value);
+            localStorage.setItem(
+              'bahai-browser-wikilinks-existing-username',
+              /** @type {HTMLInputElement} */
+              (e.target).value
+            );
           }
         },
         id: 'wikilinks-existing-username',
@@ -54,7 +71,7 @@ const tb = new TextBrowser({
       ['br', 'br']
     ]],
     // Todo: i18nize (ideally with intl-dom)
-    (window.chrome
+    (/** @type {Window & typeof globalThis & {chrome: any}} */ (window).chrome
       ? ['div', {id: 'generate-results', hidden: 'true'}, [
         ['div', {class: 'msg-error', hidden: 'true'}, [
           'Failed to copy to clipboard'
@@ -77,7 +94,10 @@ const tb = new TextBrowser({
                   }, 2000);
                 };
                 try {
-                  await navigator.clipboard.writeText($('#code').value);
+                  await navigator.clipboard.writeText(
+                    /** @type {HTMLInputElement} */
+                    ($('#code')).value
+                  );
                   $('.msg-success').hidden = false;
                 // eslint-disable-next-line no-unused-vars -- Ok
                 } /* istanbul ignore next -- How to trigger? */ catch (err) {
@@ -131,12 +151,21 @@ const tb = new TextBrowser({
             return;
           }
 
+          /**
+           * @param {{
+           *   fieldAliasOrNames: (
+           *     string|string[]|import('../types.js').LocalizationStrings
+           *   )[]|undefined,
+           *   workName: string
+           * }} cfg
+           */
           const getUrlForFieldAliasOrNames = ({
             fieldAliasOrNames, workName
           }) => {
             const paramsCopy = paramsSetter({
               ...getDataForSerializingParamsAsURL(),
-              fieldAliasOrNames,
+              // eslint-disable-next-line object-shorthand -- TS
+              fieldAliasOrNames: /** @type {string[]} */ (fieldAliasOrNames),
               workName: work, // Delete work of current page
               type: 'shortcutResult'
             });
@@ -146,7 +175,9 @@ const tb = new TextBrowser({
           const fieldAliasOrNames = await getFieldAliasOrNames();
 
           /* istanbul ignore if */
-          if (!window.chrome) {
+          if (!(/** @type {Window & typeof globalThis & {chrome: any}} */ (
+            window
+          ).chrome)) {
             const date = Date.now();
             const ADD_DATE = date;
             const LAST_MODIFIED = date;
@@ -154,11 +185,11 @@ const tb = new TextBrowser({
               new XMLSerializer().serializeToString(
                 jml({$document: {
                   $DOCTYPE: {name: 'NETSCAPE-Bookmark-file-1'},
-                  title: l('Bookmarks'),
+                  title: /** @type {string} */ (l('Bookmarks')),
                   body: [
                     ['h1', [l('Bookmarks_Menu')]],
                     ...fieldAliasOrNames.flatMap(({groupName, worksToFields}) => {
-                      return [
+                      return /** @type {import('jamilih').JamilihChildren} */ ([
                         ['dt', [
                           ['h3', {
                             ADD_DATE,
@@ -176,7 +207,9 @@ const tb = new TextBrowser({
                             // Todo: Make Chrome NativeExt add-on to manipulate its search engines (to read a bookmarks file from Firefox properly, i.e., including keywords) https://www.makeuseof.com/answers/export-google-chrome-search-engines-address-bar/
 
                             const url = getUrlForFieldAliasOrNames({
-                              workName, fieldAliasOrNames
+                              // eslint-disable-next-line object-shorthand -- TS
+                              workName: /** @type {string} */ (workName),
+                              fieldAliasOrNames
                             });
 
                             return ['dt', [
@@ -191,7 +224,7 @@ const tb = new TextBrowser({
                             ]];
                           })
                         ]]
-                      ];
+                      ]);
                     })
                   ]
                 }})
@@ -221,7 +254,9 @@ const tb = new TextBrowser({
           const urls = fieldAliasOrNames.flatMap(({worksToFields}) => {
             return worksToFields.map(({fieldAliasOrNames, workName, shortcut: SHORTCUTURL}) => {
               const url = getUrlForFieldAliasOrNames({
-                workName, fieldAliasOrNames
+                // eslint-disable-next-line object-shorthand -- TS
+                workName: /** @type {string} */ (workName),
+                fieldAliasOrNames
               });
               return {
                 // eslint-disable-next-line camelcase --- Using for i18n
@@ -232,7 +267,8 @@ const tb = new TextBrowser({
             });
           });
           // Keep `var` instead of `let`/`const` so can be re-pasted if needed
-          $('#code').value = `  var searchEngines = ${JSON.stringify(urls)};
+          /** @type {HTMLInputElement} */
+          ($('#code')).value = `  var searchEngines = ${JSON.stringify(urls)};
 
 searchEngines.forEach(({ short_name, keyword, url }) => {
 // Actual search engine import magic

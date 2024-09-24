@@ -22,12 +22,14 @@ pm:
 
 */
 const ellipsis = '\u2026';
+
+/** @type {import('../types.js').GetCellData} */
 export const getCellData = function ({
   applicableFieldText, tr,
   fieldLang, meta
 }) {
   // To ensure we end the ellipsis on a word
-  const words = applicableFieldText.split(/\s/u);
+  const words = /** @type {string} */ (applicableFieldText).split(/\s/u);
   let output = '';
   words.some((word) => {
     if ((output + word).length >= 25) {

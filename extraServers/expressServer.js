@@ -3,11 +3,13 @@
 import express from 'express';
 
 // Todo: Should really get textbrowser to accept multiple Express middleware
+// @ts-expect-error Needs types
 import createBahaiDateApiServer from 'bahai-date-api/createServer.js';
+// @ts-expect-error Needs types
 import bahaiReflibDataServer from 'bahai-reflib-data-server/server/index.js';
 
 const expressServer = () => {
-  const app = createBahaiDateApiServer();
+  const app = /** @type {import('express').Router} */ (createBahaiDateApiServer());
 
   const reflibAndDateServer = bahaiReflibDataServer({
     app,

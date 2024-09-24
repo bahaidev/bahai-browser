@@ -1,5 +1,7 @@
 /* eslint-env node -- Environment */
 import {join} from 'path';
+
+// @ts-expect-error Needs types
 import getHttpQuery from 'httpquery';
 
 const getServer = function () {

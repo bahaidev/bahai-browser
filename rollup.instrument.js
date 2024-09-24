@@ -1,3 +1,4 @@
+// @ts-expect-error No types
 import istanbul from 'rollup-plugin-istanbul';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 

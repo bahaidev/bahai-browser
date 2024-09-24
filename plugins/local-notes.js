@@ -1,4 +1,6 @@
 /* eslint-disable no-alert, camelcase -- Simple errors; Chrome-extension friendly */
+
+/** @type {{[key: string]: {[key: string]: string}}} */
 const locales = {
   'en-US': {
     loading: 'Loading...',
@@ -16,35 +18,47 @@ const locales = {
   }
 };
 
+/**
+ * @param {string} sel
+ */
 const $$ = (sel) => {
   return [...document.querySelectorAll(sel)];
 };
 
 /**
  *
- * @param {Element} textarea
+ * @param {HTMLElement} textarea
  * @returns {string} The ID
  */
 function getCanonicalID (textarea) {
-  return textarea.parentNode.parentNode.dataset.canonicalId;
+  return /** @type {string} */ (/** @type {HTMLElement} */ (
+    textarea.parentNode?.parentNode
+  )?.dataset?.canonicalId);
 }
 
 export const escapeColumn = false;
 
 // `done` is always only run on the client
+
+/** @type {import('../types.js').Done} */
 export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
   // Todo: Fetch locales
   // const results = await fetch('locales.json');
   // const locales = await results.json();
 
   // Todo: Should probably utilize same i18n mechanism as TextBrowser (passed from it?)
-  const lang = $p.get('lang', true);
+  const lang = /** @type {string} */ ($p.get('lang', true));
+
+  /**
+   * @param {string} key
+   */
   const l = (key) => {
     const locale = locales[lang] || locales['en-US'];
     return locale[key];
   };
 
-  [...document.querySelectorAll('td[data-col]')].forEach((td) => {
+  /** @type {HTMLElement[]} */
+  ([...document.querySelectorAll('td[data-col]')]).forEach((td) => {
     // Needed for allowing textarea in local-notes to expand
     td.style.position = 'relative';
   });
@@ -55,7 +69,8 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
 
   // Todo: Accept alternative namespace through TextBrowser
   const openReq = indexedDB.open(localNotesDatabase);
-  openReq.addEventListener('upgradeneeded', ({target: {result: db}}) => {
+  openReq.addEventListener('upgradeneeded', (e) => {
+    const db = /** @type {EventTarget & {result: IDBDatabase}} */ (e.target).result;
     db.addEventListener('versionchange', () => {
       if (!document.hasFocus()) {
         location.reload();
@@ -80,7 +95,8 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
   openReq.addEventListener('blocked', () => {
     alert(l('blocked_opening'));
   });
-  openReq.addEventListener('success', ({target: {result: db}}) => {
+  openReq.addEventListener('success', (e) => {
+    const db = /** @type {EventTarget & {result: IDBDatabase}} */ (e.target).result;
     const tx = db.transaction(workStore, 'readonly');
     // tx.addEventListener('complete', () => {});
     tx.addEventListener('error', () => {
@@ -91,8 +107,13 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
     // Todo: Ideally we'd get starts/ends, but these can vary for browse field set
     // const req = idx.getAll(IDBKeyRange.bound(starts, ends));
     const req = idx.getAll();
-    req.addEventListener('success', ({target: {result}}) => {
-      $$('textarea[data-local-notes]').forEach((textarea, i) => {
+    req.addEventListener('success', (e) => {
+      // eslint-disable-next-line prefer-destructuring -- TS
+      const result = /** @type {EventTarget & {result: {id: string, value: string}[]}} */ (
+        e.target
+      ).result;
+      /** @type {HTMLTextAreaElement[]} */
+      ($$('textarea[data-local-notes]')).forEach((textarea, i) => {
         // textarea.value = result[i] || '';
         const id = getCanonicalID(textarea);
         // const canonicalBrowseFieldVals = id.split('-');
@@ -107,7 +128,8 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
   });
 
   // Todo: Depending on config, allow this to be optional (i.e., readonly)
-  window.addEventListener('change', ({target: textarea}) => {
+  window.addEventListener('change', (e) => {
+    const textarea = /** @type {HTMLTextAreaElement} */ (e.target);
     if (!textarea.matches('textarea[data-local-notes]')) {
       return;
     }
@@ -115,7 +137,8 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
     // const canonicalBrowseFieldVals = id.split('-');
 
     const openReq = indexedDB.open(localNotesDatabase);
-    openReq.addEventListener('success', ({target: {result: db}}) => {
+    openReq.addEventListener('success', (e) => {
+      const db = /** @type {EventTarget & {result: IDBDatabase}} */ (e.target).result;
       const tx = db.transaction(workStore, 'readwrite');
       // tx.addEventListener('complete', () => {});
       tx.addEventListener('error', () => {
@@ -125,10 +148,10 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
       // Todo: Ensure multiple entries per verse are supported
       const obj = {id, value: textarea.value};
       /*
-            canonicalBrowseFieldVals.forEach((browseFieldVal, i) => {
-                obj[canonicalBrowseFieldNames[i]] = browseFieldVal;
-            });
-            */
+        canonicalBrowseFieldVals.forEach((browseFieldVal, i) => {
+            obj[canonicalBrowseFieldNames[i]] = browseFieldVal;
+        });
+      */
       store.put(obj);
     });
   });
@@ -143,10 +166,15 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
   });
 };
 
+/** @type {import('../types.js').GetCellData} */
 export const getCellData = ({
   fieldLang, meta, $p
 }) => {
-  const lang = $p.get('lang', true);
+  const lang = /** @type {string} */ ($p.get('lang', true));
+
+  /**
+   * @param {string} key
+   */
   const l = (key) => {
     const locale = locales[lang] || locales['en-US'];
     return locale[key];

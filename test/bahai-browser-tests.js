@@ -1,6 +1,13 @@
 /* globals path, appBase, JsonRefs, Ajv,
     getJSON, __dirname -- Polyglot */
 
+/**
+ * @typedef {JSONValue[]} JSONArray
+ */
+/**
+ * @typedef {null|boolean|number|string|JSONArray|{[key: string]: JSONValue}} JSONValue
+ */
+
 const textbrowserDataSchemasBase = appBase +
   'node_modules/textbrowser-data-schemas/schemas/';
 const textbrowserBase = appBase + 'node_modules/textbrowser/';
@@ -11,10 +18,10 @@ const schemaBase = textbrowserBase + 'general-schemas/';
 const jsonSchemaSpec = 'node_modules/json-metaschema/draft-07-schema.json';
 
 /**
-* @param {PlainObject} schema The schema object
-* @param {PlainObject} data The instance document to validate
-* @param {string[][]} extraSchemas
-* @param {PlainObject} additionalOptions
+* @param {import('json-schema').JSONSchema4} schema The schema object
+* @param {JSONValue} data The instance document to validate
+* @param {[string, import('json-schema').JSONSchema4][]} extraSchemas
+* @param {object} additionalOptions
 * @returns {boolean} Whether valid or not
 */
 function validate (schema, data, extraSchemas = [], additionalOptions = {}) {
@@ -23,7 +30,7 @@ function validate (schema, data, extraSchemas = [], additionalOptions = {}) {
     addUsedSchema: false,
     ...additionalOptions
   });
-  let valid;
+  let valid = false;
   try {
     ajv.addFormat('uri', () => true); // For validation of schemas
     ajv.addFormat('regex', () => true); // For validation of schemas
@@ -73,13 +80,35 @@ describe('bahaiwritings Tests', function () {
       {resolved: filesSchema},
       ...extraSchemaObjects
     ] = results;
-    const extraSchemas = extraSchemaObjects.map((eso, i) => [
-      extraSchemaFiles[i], eso
-    ]);
+    const extraSchemas = /** @type {[string, import('json-schema').JSONSchema4][]} */ (
+      extraSchemaObjects.map((eso, i) => [
+        extraSchemaFiles[i], eso
+      ])
+    );
 
     // This circular reference wasn't being fixed by the JsonRefs preprocessor,
     //   so we have to graft it ourselves after the fact
-    filesSchema.properties['localization-strings'].
+    /**
+     * @type {{
+     *   properties: {'localization-strings': {
+     *     patternProperties: {
+     *       '.*': {
+     *         patternProperties: {
+     *           '.*': {
+     *             anyOf: [{}, {}, {
+     *               patternProperties: {
+     *                 '.*': {
+     *                   anyOf: [{}, {}, {$ref: string}]
+     *                 }
+     *               }
+     *             }]
+     *           }
+     *         }
+     *       }
+     *     }
+     *   }}
+     * }}
+     */ (filesSchema).properties['localization-strings'].
       patternProperties['.*'].patternProperties['.*'].
       anyOf[2].patternProperties['.*'].anyOf[2].$ref =
         JsonRefs.pathToPtr([
@@ -87,7 +116,12 @@ describe('bahaiwritings Tests', function () {
           'patternProperties', '.*', 'anyOf', '2'
         ]);
 
-    const valid = validate(filesSchema, filesData, extraSchemas);
+    const valid = validate(
+      filesSchema,
+      /** @type {JSONValue} */
+      (filesData),
+      extraSchemas
+    );
     assert.strictEqual(valid, true);
 
     // This doesn't remove all as hoped as don't have
@@ -190,6 +224,7 @@ describe('bahaiwritings Tests', function () {
       dataFiles, schemaFiles,
       otherDataFiles, otherSchemaFiles,
       [table],
+      // @ts-expect-error Ok
       [{resolved: metadataSchemaFile}]
     ] = [
       specificFiles, specificFiles,
@@ -197,17 +232,19 @@ describe('bahaiwritings Tests', function () {
       tableFiles,
       [null]
     ].map((files) => {
-      // eslint-disable-next-line no-return-assign, sonarjs/no-nested-assignment -- Convenient
-      return results.slice(cursor, cursor += files.length);
+      const newCursor = cursor + files.length;
+      const ret = results.slice(cursor, newCursor);
+      cursor = newCursor;
+      return ret;
     });
 
-    const extraSchemas = [
+    const extraSchemas = /** @type {[string, import('json-schema').JSONSchema4][]} */ ([
       [
         '../../../node_modules/textbrowser-data-schemas/' +
           'schemas/table.jsonschema',
         table
       ]
-    ];
+    ]);
 
     // JsonRefs does not resolve into a circular local path, so we do so
     //   ourselves
@@ -217,6 +254,20 @@ describe('bahaiwritings Tests', function () {
           'properties', 'localization-strings'
         ]);
 
+    /**
+     * @typedef {{
+     *   resolved: {
+     *     data: JSONValue,
+     *     metadata: JSONValue
+     *   }
+     * }} DataFile
+     */
+
+    /**
+     * @param {DataFile[]} dtaFiles
+     * @param {import('json-schema').JSONSchema4[]} schmaFiles
+     * @returns {void}
+     */
     const testSchemaFiles = (dtaFiles, schmaFiles) => {
       dtaFiles.forEach(({resolved: {data, metadata}}, i) => {
         const schema = schmaFiles[i];
@@ -240,8 +291,14 @@ describe('bahaiwritings Tests', function () {
         // assert.strictEqual(diff.length, 0);
       });
     };
-    testSchemaFiles(dataFiles, schemaFiles);
-    testSchemaFiles(otherDataFiles, otherSchemaFiles);
+    testSchemaFiles(
+      /** @type {DataFile[]} */ (dataFiles),
+      /** @type {import('json-schema').JSONSchema4[]} */ (schemaFiles)
+    );
+    testSchemaFiles(
+      /** @type {DataFile[]} */ (otherDataFiles),
+      /** @type {import('json-schema').JSONSchema4[]} */ (otherSchemaFiles)
+    );
   });
   it('site.json test', async function () {
     this.timeout(20000);
@@ -261,17 +318,34 @@ describe('bahaiwritings Tests', function () {
     const [
       {resolved: data}, jsonSchema, {resolved: schema}, localeSchema
     ] = results;
-    const extraSchemas = [['locale.jsonschema', localeSchema]];
+    const extraSchemas = /** @type {[string, import('json-schema').JSONSchema4][]} */ (
+      [['locale.jsonschema', localeSchema]]
+    );
 
     // This circular reference wasn't being converted to a pure path by
     //   JsonRefs, so we have to alter it ourselves after the fact
-    schema.properties['localization-strings'].
+    /**
+     * @type {{
+     *   properties: {
+     *     'localization-strings': {
+     *        patternProperties: {
+     *          '.*': {
+     *            anyOf: [{}, {}, {
+     *              $ref: string
+     *            }]
+     *          }
+     *        }
+     *     }
+     *   }
+     * }}
+     */
+    (schema).properties['localization-strings'].
       patternProperties['.*'].anyOf[2].$ref =
         JsonRefs.pathToPtr([
           'properties', 'localization-strings'
         ]);
 
-    const valid = validate(schema, data, extraSchemas);
+    const valid = validate(schema, /** @type {JSONValue} */ (data), extraSchemas);
     assert.strictEqual(valid, true);
 
     // This doesn't remove all as hoped as don't have
@@ -288,9 +362,15 @@ describe('bahaiwritings Tests', function () {
 
     const schemas = results.slice(2);
     schemas.forEach((schma) => {
-      const vlid = validate(jsonSchema, schma, extraSchemas, {
-        allowUnionTypes: true
-      });
+      const vlid = validate(
+        /** @type {import('json-schema').JSONSchema4} */
+        (jsonSchema),
+        /** @type {JSONValue} */
+        (schma),
+        extraSchemas, {
+          allowUnionTypes: true
+        }
+      );
       assert.strictEqual(vlid, true);
 
       // This doesn't remove all as hoped as don't have
@@ -308,21 +388,24 @@ describe('bahaiwritings Tests', function () {
   });
 
   it('userJSON tests', async () => {
-    const [jsonSchema, userJSONSchema, userJSON] = await getJSON([
-      path.join(
-        __dirname,
-        appBase + jsonSchemaSpec
-      ),
-      path.join(
-        __dirname,
-        schemaBase,
-        'user-json.jsonschema'
-      ),
-      path.join(
-        __dirname,
-        appBase + 'resources/user.json'
-      )
-    ]);
+    const [jsonSchema, userJSONSchema, userJSON] =
+    /** @type {import('json-schema').JSONSchema4[]} */ (
+        await getJSON([
+          path.join(
+            __dirname,
+            appBase + jsonSchemaSpec
+          ),
+          path.join(
+            __dirname,
+            schemaBase,
+            'user-json.jsonschema'
+          ),
+          path.join(
+            __dirname,
+            appBase + 'resources/user.json'
+          )
+        ])
+      );
 
     const validSchema = validate(jsonSchema, userJSONSchema, undefined, {
       allowUnionTypes: true

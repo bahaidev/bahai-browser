@@ -1,16 +1,26 @@
+/**
+ * @param {string} sel
+ */
 const $ = (sel) => document.querySelector(sel);
+/**
+ * @param {string} sel
+ */
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
 export const escapeColumn = false;
 
+/** @type {import('../types.js').GetCellData} */
 export const getCellData = function ({
   applicableFieldText, tr,
-  fieldLang, meta, metaApplicableField
+  fieldLang, meta, metaApplicableField: mf
 }) {
+  const metaApplicableField = /** @type {{[key: string]: string}} */ (mf);
   return `<a class="wikilinks-existing-user" style="color: gray;"
     data-user-url="${metaApplicableField.userURL}"
     data-user-edit-url="${metaApplicableField.userEditURL}"
-    href="${metaApplicableField.baseURL.replaceAll('%s', applicableFieldText)}">${
+    href="${metaApplicableField.baseURL.replaceAll(
+    '%s', /** @type {string} */ (applicableFieldText)
+  )}">${
   applicableFieldText
 }</a>
   <span id="wikilinks-existing-message${applicableFieldText}" hidden style="color: red;">
@@ -19,19 +29,26 @@ export const getCellData = function ({
   <span id="wikilinks-existing-userLinkHolder${applicableFieldText}"></span>`;
 };
 
+/** @type {import('../types.js').Done} */
 export const done = ({$p, thisObj}) => {
-  $$('.wikilinks-existing-user').forEach((userInfo) => {
+  /** @type {HTMLAnchorElement[]} */
+  ($$('.wikilinks-existing-user')).forEach((userInfo) => {
     const user = localStorage.getItem(
       'bahai-browser-wikilinks-existing-username'
     );
 
-    const parNumber = userInfo.textContent.trim();
-    $(`#wikilinks-existing-message${parNumber}`).hidden = user;
+    const parNumber = /** @type {string} */ (userInfo.textContent?.trim());
+    /** @type {HTMLSpanElement} */
+    ($(`#wikilinks-existing-message${parNumber}`)).hidden = Boolean(user);
 
-    const userLinkHolder = $(`#wikilinks-existing-userLinkHolder${parNumber}`);
+    const userLinkHolder = /** @type {HTMLSpanElement} */ (
+      $(`#wikilinks-existing-userLinkHolder${parNumber}`)
+    );
     if (user) {
       userLinkHolder.textContent = '';
-      const editOwnUrl = userInfo.dataset.userEditUrl.replaceAll(
+      const editOwnUrl = /** @type {string} */ (
+        userInfo.dataset.userEditUrl
+      ).replaceAll(
         '%USER', user
       ).replaceAll('%s', parNumber);
       const a = document.createElement('a');
@@ -64,7 +81,8 @@ export const done = ({$p, thisObj}) => {
       const pageIsExisting = json.query.categorymembers[0];
       // console.log('pageIsExisting', pageIsExisting);
 
-      e.target.style.color = pageIsExisting ? 'blue' : 'orange';
+      /** @type {HTMLAnchorElement} */
+      (e.target).style.color = pageIsExisting ? 'blue' : 'orange';
     });
   });
 };

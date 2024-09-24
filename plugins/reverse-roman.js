@@ -7,7 +7,9 @@ Todo: If using, could add, e.g.:
     }
 }
 */
-
+/**
+ * @typedef {number} Integer
+ */
 /**
  *
  * @param {string} str
@@ -40,6 +42,7 @@ function convertFromRoman (str) {
   return result;
 }
 
+/** @type {import('../types.js').GetCellData} */
 export const getCellData = function ({
   applicableFieldText, tr,
   fieldLang, meta

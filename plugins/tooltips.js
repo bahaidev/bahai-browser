@@ -1,11 +1,15 @@
-import tippy from '../external/tippy.js';
+import tippy from 'tippy.js';
 
 export const escapeColumn = false;
+
+/** @type {import('../types.js').GetCellData} */
 export const getCellData = function ({
   applicableFieldText, tr,
   metaApplicableField, fieldInfo /* , fieldLang */
 }) {
-  const {targetField} = metaApplicableField;
+  const {targetField} = /** @type {{[key: string]: string}} */ (
+    metaApplicableField
+  );
   const targetFieldIdx = fieldInfo.findIndex(({field}) => {
     return field === targetField;
   });
@@ -15,6 +19,7 @@ export const getCellData = function ({
 };
 
 export const done = function () {
+  // @ts-expect-error ???
   tippy('[data-tooltip][data-tippy-content]', {
     followCursor: true,
     distance: 50,

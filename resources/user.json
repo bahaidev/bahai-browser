@@ -31,6 +31,8 @@
         "plugins/wikilinks.js",
         "plugins/wikilinks-existing.js",
         "plugins/wordbyword-tooltips.js",
-        "plugins/wordbyword.js"
+        "plugins/wordbyword.js",
+
+        "node_modules/textbrowser/dist/assets/languages-DWwAAJMo.json"
     ]
 }

@@ -1,6 +1,6 @@
 # CHANGES to `bahai-browser`
 
-## ?
+## 0.6.1
 
 - fix: cache JSON
 

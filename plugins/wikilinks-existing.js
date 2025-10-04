@@ -19,10 +19,10 @@ export const getCellData = function ({
     data-user-url="${metaApplicableField.userURL}"
     data-user-edit-url="${metaApplicableField.userEditURL}"
     href="${metaApplicableField.baseURL.replaceAll(
-    '%s', /** @type {string} */ (applicableFieldText)
-  )}">${
-  applicableFieldText
-}</a>
+      '%s', /** @type {string} */ (applicableFieldText)
+    )}">${
+      applicableFieldText
+    }</a>
   <span id="wikilinks-existing-message${applicableFieldText}" hidden style="color: red;">
     Add a username in "Preferences"
   </span>

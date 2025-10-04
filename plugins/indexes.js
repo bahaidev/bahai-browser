@@ -1,4 +1,5 @@
 
+/* eslint-disable sonarjs/no-internal-api-use -- Web app */
 // @ts-expect-error Needs types
 import indexJSON from '../node_modules/bahai-indexes/indexes/json-flattened/aqdas.js';
 // @ts-expect-error Needs types

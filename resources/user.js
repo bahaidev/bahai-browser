@@ -71,7 +71,7 @@ const tb = new TextBrowser({
       ['br', 'br']
     ]],
     // Todo: i18nize (ideally with intl-dom)
-    (/** @type {Window & typeof globalThis & {chrome: any}} */ (window).chrome
+    (/** @type {Window & typeof globalThis & {chrome: boolean}} */ (globalThis).chrome
       ? ['div', {id: 'generate-results', hidden: 'true'}, [
         ['div', {class: 'msg-error', hidden: 'true'}, [
           'Failed to copy to clipboard'
@@ -99,7 +99,6 @@ const tb = new TextBrowser({
                     ($('#code')).value
                   );
                   $('.msg-success').hidden = false;
-                // eslint-disable-next-line no-unused-vars -- Ok
                 } /* istanbul ignore next -- How to trigger? */ catch (err) {
                   /* istanbul ignore next -- How to trigger? */
                   $('.msg-error').hidden = false;
@@ -175,8 +174,8 @@ const tb = new TextBrowser({
           const fieldAliasOrNames = await getFieldAliasOrNames();
 
           /* istanbul ignore if */
-          if (!(/** @type {Window & typeof globalThis & {chrome: any}} */ (
-            window
+          if (!(/** @type {Window & typeof globalThis & {chrome: boolean}} */ (
+            globalThis
           ).chrome)) {
             const date = Date.now();
             const ADD_DATE = date;
@@ -239,7 +238,7 @@ const tb = new TextBrowser({
                 '\n<dt>'
               )
             ], {type: 'text/html'});
-            const url = window.URL.createObjectURL(blob);
+            const url = globalThis.URL.createObjectURL(blob);
             const a = jml('a', {
               hidden: true,
               download: 'bookmarks.html',

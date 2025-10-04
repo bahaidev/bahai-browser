@@ -10,6 +10,14 @@
  * }} IntlURLSearchParams
  */
 
+/* eslint-disable jsdoc/reject-any-type -- Arbitrary */
+/**
+ * @typedef {any} LogValue
+ */
+/**
+ * @typedef {any} MetaValue
+ */
+/* eslint-enable jsdoc/reject-any-type -- Arbitrary */
 /**
  * @typedef {{
 *   code: string,
@@ -57,7 +65,7 @@
 *     lang: string[],
 *     langs: LanguageInfo[],
 *     fallbackLanguages: string[],
-*     log: (...args: any[]) => void,
+*     log: (...args: LogValue[]) => void,
 *     nodeActivate?: boolean,
 *     port?: number,
 *     skipIndexedDB: false,
@@ -105,7 +113,7 @@
 *     targetLanguage: string,
 *     applicableField: string,
 *     applicableFieldI18N: string|string[]|LocalizationStrings,
-*     meta: any,
+*     meta: MetaValue,
 *     metaApplicableField: {
 *       [key: string]: string
 *     },

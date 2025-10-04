@@ -1,6 +1,6 @@
 describe('Work display page', () => {
   beforeEach(async () => {
-    if (!window.navigator || !navigator.serviceWorker) {
+    if (!globalThis.navigator || !navigator.serviceWorker) {
       return null;
     }
     const registrations = await navigator.serviceWorker.getRegistrations();
@@ -240,7 +240,7 @@ describe('Work display page', () => {
       });
     });
 
-    // eslint-disable-next-line mocha/no-skipped-tests -- Todo
+    // eslint-disable-next-line mocha/no-pending-tests -- Todo
     it.skip('checks impact of setting wiki user name', function () {
       // Todo: Check impact of settingw wiki user name
     });
@@ -281,7 +281,7 @@ describe('Work display page', () => {
       });
     });
 
-    // eslint-disable-next-line mocha/no-skipped-tests -- Todo
+    // eslint-disable-next-line mocha/no-pending-tests -- Todo
     it.skip('checks localized parameter names', function () {
       // Todo: complete by checking URL params
     });

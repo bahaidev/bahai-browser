@@ -70,7 +70,7 @@ export const done = function (cfg) {
       alert('Voices are now available');
     }
   });
-  window.addEventListener('click', (e) => {
+  globalThis.addEventListener('click', (e) => {
     // eslint-disable-next-line prefer-destructuring -- TS
     const target = /** @type {EventTarget & HTMLElement} */ (e.target);
     // eslint-disable-next-line prefer-destructuring -- TS

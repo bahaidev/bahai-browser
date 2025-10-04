@@ -1,5 +1,9 @@
 # CHANGES to `bahai-browser`
 
+## ?
+
+- chore: update intl-locale-textinfo-polyfill and devDeps.
+
 ## 0.6.1
 
 - fix: cache JSON

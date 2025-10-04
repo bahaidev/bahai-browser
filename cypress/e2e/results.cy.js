@@ -12,7 +12,7 @@ function isScrolledIntoView (win, el) {
 
   // Only completely visible elements return true:
   // const isVisible = (elemTop >= 0) &&
-  //    (elemBottom <= window.innerHeight);
+  //    (elemBottom <= globalThis.innerHeight);
   // Partially visible elements return true:
   const isVisible = elemTop < win.innerHeight && elemBottom >= 0;
   return isVisible;
@@ -20,7 +20,7 @@ function isScrolledIntoView (win, el) {
 
 describe('Results page', () => {
   beforeEach(async () => {
-    if (!window.navigator || !navigator.serviceWorker) {
+    if (!globalThis.navigator || !navigator.serviceWorker) {
       return null;
     }
     const registrations = await navigator.serviceWorker.getRegistrations();

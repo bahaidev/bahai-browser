@@ -128,7 +128,7 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
   });
 
   // Todo: Depending on config, allow this to be optional (i.e., readonly)
-  window.addEventListener('change', (e) => {
+  globalThis.addEventListener('change', (e) => {
     const textarea = /** @type {HTMLTextAreaElement} */ (e.target);
     if (!textarea.matches('textarea[data-local-notes]')) {
       return;
@@ -159,8 +159,8 @@ export const done = ({$p, thisObj}) => { // , canonicalBrowseFieldNames
   // Todo: Not yet supported in Chrome (Firefox only); otherwise need
   //          `mousedown`, etc.
   // Also a `selectstart` event
-  window.addEventListener('selectionchange', () => {
-    const sel = window.getSelection();
+  globalThis.addEventListener('selectionchange', () => {
+    const sel = globalThis.getSelection();
     // Todo: Use this to set (last focused?) path adjoining textarea
     console.log('sel', sel);
   });

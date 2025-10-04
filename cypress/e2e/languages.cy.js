@@ -1,6 +1,6 @@
 describe('Languages page', () => {
   beforeEach(async () => {
-    if (!window.navigator || !navigator.serviceWorker) {
+    if (!globalThis.navigator || !navigator.serviceWorker) {
       return null;
     }
     const registrations = await navigator.serviceWorker.getRegistrations();

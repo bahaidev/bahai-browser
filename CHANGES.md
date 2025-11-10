@@ -1,7 +1,8 @@
 # CHANGES to `bahai-browser`
 
-## ?
+## 0.7.0
 
+- chore: switch to bahai-date-api release and node-static fork
 - chore: update intl-locale-textinfo-polyfill and devDeps.
 
 ## 0.6.1

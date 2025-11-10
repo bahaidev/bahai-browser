@@ -2,7 +2,7 @@
   "name": "bahai-browser",
   "description": "An app to browser the Bahá'í Writings and associated texts'",
   "type": "module",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "engines": {
     "node": ">=14.13.0"
   },
@@ -53,8 +53,8 @@
     "test": "npm run eslint && run-p server cypress"
   },
   "dependencies": {
-    "@brettz9/node-static": "^0.1.1",
-    "bahai-date-api": "https://github.com/dragfyre/bahai-date-api#master",
+    "@node-static/node-static": "^0.8.0",
+    "bahai-date-api": "1.0.0",
     "bahai-indexes": "^0.14.0",
     "bahai-reflib-data-server": "^0.12.0",
     "bahaiwritings": "^0.44.2",

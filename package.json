@@ -48,7 +48,7 @@
     "server-coverage": "echo 'Not including other servers as their interference with proper static server conflicts with Cypress' && textbrowser --allowPlugins --namespace=bahaiwritings",
     "server": "textbrowser --allowPlugins --namespace=bahaiwritings --httpServer=../../../extraServers/indexServer.js --expressServer ../../../extraServers/expressServer.js",
     "server-activate": "textbrowser --allowPlugins --nodeActivate  --namespace=bahaiwritings",
-    "dev-server": "node ../textbrowser/server/main.js --allowPlugins --namespace=bahaiwritings --httpServer=../../bahaiwritings/extraServers/indexServer.js",
+    "dev-server": "node ../textbrowser/server/main.js --allowPlugins --namespace=bahaiwritings --httpServer=../../bahai-browser/extraServers/indexServer.js",
     "copy-tb": "cp -a ../textbrowser/dist/. node_modules/textbrowser/dist/ && cp -a ../textbrowser/resources/. node_modules/textbrowser/resources/ && cp -a ../textbrowser/locales/. node_modules/textbrowser/locales/ && cp -a ../textbrowser/server/. node_modules/textbrowser/server/ && chmod -R 755 node_modules/textbrowser/server/",
     "test": "npm run eslint && run-p server cypress"
   },
@@ -62,7 +62,7 @@
     "intl-locale-textinfo-polyfill": "^3.0.0",
     "load-stylesheets": "^0.12.5",
     "open-cli": "^8.0.0",
-    "textbrowser": "^0.51.0",
+    "textbrowser": "^0.53.0",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {

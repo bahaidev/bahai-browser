@@ -62,7 +62,7 @@
     "intl-locale-textinfo-polyfill": "^3.0.0",
     "load-stylesheets": "^0.12.5",
     "open-cli": "^8.0.0",
-    "textbrowser": "^0.54.0",
+    "textbrowser": "^0.54.1",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
@@ -91,5 +91,13 @@
     "simple-get-json": "^10.0.0",
     "textbrowser-data-schemas": "^0.2.0",
     "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "canvas@2.11.2": true,
+    "fsevents@2.3.2": true,
+    "is-hidden-file@1.1.2": true,
+    "sqlite3@5.1.7": true,
+    "unrs-resolver@1.11.1": true,
+    "cypress@15.18.0": true
   }
 }

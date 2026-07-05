@@ -62,7 +62,7 @@
     "intl-locale-textinfo-polyfill": "^3.0.0",
     "load-stylesheets": "^0.12.5",
     "open-cli": "^8.0.0",
-    "textbrowser": "^0.54.10",
+    "textbrowser": "^0.54.11",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
